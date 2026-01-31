@@ -491,7 +491,7 @@
                         ]
                     },
                     {
-                        "description": "K02 BLE Keyboard - 地球ボタン → スペース4回+Enter",
+                        "description": "K02 BLE Keyboard - 地球ボタン・ボタン2設定",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -525,10 +525,29 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "地球ボタン → スペース4回+Enter",
+                                "description": "地球ボタン → Spotlight",
                                 "from": {
                                     "key_code": "spacebar",
                                     "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "apple_vendor_keyboard_key_code": "spotlight" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "ボタン2 → スペース4回+Enter",
+                                "from": {
+                                    "pointing_button": "button2"
                                 },
                                 "to": [
                                     { "key_code": "spacebar" },
@@ -1063,10 +1082,6 @@
                         },
                         {
                             "from": { "pointing_button": "button1" },
-                            "to": [{ "key_code": "left_shift" }]
-                        },
-                        {
-                            "from": { "pointing_button": "button2" },
                             "to": [{ "key_code": "left_shift" }]
                         }
                     ],
