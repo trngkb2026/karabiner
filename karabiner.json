@@ -546,9 +546,7 @@
                                     }
                                 ],
                                 "description": "ボタン2 → スペース4回+Enter",
-                                "from": {
-                                    "pointing_button": "button2"
-                                },
+                                "from": { "pointing_button": "button2" },
                                 "to": [
                                     { "key_code": "spacebar" },
                                     { "key_code": "spacebar" },
@@ -1058,19 +1056,19 @@
                     "simple_modifications": [
                         {
                             "from": { "consumer_key_code": "mute" },
-                            "to": [{ "consumer_key_code": "dictation" }]
+                            "to": [{ "key_code": "m", "modifiers": ["command", "shift"] }]
                         },
                         {
                             "from": { "consumer_key_code": "play_or_pause" },
-                            "to": [{ "key_code": "f16" }]
-                        },
-                        {
-                            "from": { "consumer_key_code": "scan_next_track" },
                             "to": [{ "key_code": "f11" }]
                         },
                         {
-                            "from": { "consumer_key_code": "scan_previous_track" },
+                            "from": { "consumer_key_code": "scan_next_track" },
                             "to": [{ "key_code": "f3" }]
+                        },
+                        {
+                            "from": { "consumer_key_code": "scan_previous_track" },
+                            "to": [{ "key_code": "l", "modifiers": ["command", "shift"] }]
                         },
                         {
                             "from": { "consumer_key_code": "volume_decrement" },
@@ -1078,11 +1076,11 @@
                         },
                         {
                             "from": { "consumer_key_code": "volume_increment" },
-                            "to": [{ "apple_vendor_keyboard_key_code": "spotlight" }]
+                            "to": [{ "key_code": "2", "modifiers": ["command", "shift"] }]
                         },
                         {
                             "from": { "pointing_button": "button1" },
-                            "to": [{ "key_code": "left_shift" }]
+                            "to": [{ "consumer_key_code": "dictation" }]
                         }
                     ],
                     "treat_as_built_in_keyboard": true
