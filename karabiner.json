@@ -260,8 +260,74 @@
                         ]
                     },
                     {
-                        "description": "Ewin X8 - カスタム設定",
+                        "description": "X8 BLE Keyboard - カスタム設定",
                         "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    },
+                                    {
+                                        "name": "x8_ble_caps_ime",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "description": "Caps → 英数（トグル）",
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "x8_ble_caps_ime",
+                                            "value": 0
+                                        }
+                                    },
+                                    { "key_code": "japanese_eisuu" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    },
+                                    {
+                                        "name": "x8_ble_caps_ime",
+                                        "type": "variable_unless",
+                                        "value": 1
+                                    }
+                                ],
+                                "description": "Caps → かな（トグル）",
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "x8_ble_caps_ime",
+                                            "value": 1
+                                        }
+                                    },
+                                    { "key_code": "japanese_kana" }
+                                ],
+                                "type": "basic"
+                            },
                             {
                                 "conditions": [
                                     {
@@ -274,11 +340,105 @@
                                         "type": "device_if"
                                     }
                                 ],
+                                "description": "ボタン1（ポインティング）→ 音声入力",
                                 "from": {
-                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] },
+                                    "pointing_button": "button1"
+                                },
+                                "to": [{ "consumer_key_code": "dictation" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "ボタン3（ポインティング）→ ⌘W",
+                                "from": {
+                                    "modifiers": { "optional": ["any"] },
+                                    "pointing_button": "button3"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "w",
+                                        "modifiers": ["command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "application キー → アプリケーションのウィンドウ（Control+↓ / osascript）",
+                                "from": {
+                                    "key_code": "application",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "key_code": "japanese_kana" }],
+                                "to": [
+                                    {
+                                        "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to key code 125 using control down'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "ac_home（Consumer）→ デスクトップ表示（F11 / osascript）",
+                                "from": {
+                                    "consumer_key_code": "ac_home",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to key code 103'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "ミュート（Consumer）→ Mission Control",
+                                "from": {
+                                    "consumer_key_code": "mute",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "mission_control" }],
                                 "type": "basic"
                             }
                         ]
@@ -286,6 +446,28 @@
                     {
                         "description": "Magic Keyboard - カスタム設定",
                         "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 671,
+                                                "vendor_id": 76
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "F2 → Shift+F13",
+                                "from": { "key_code": "f2" },
+                                "to": [
+                                    {
+                                        "key_code": "f13",
+                                        "modifiers": ["shift"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
                             {
                                 "conditions": [
                                     {
@@ -320,9 +502,31 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "F4 → Tenten8223+Enter",
+                                "description": "F4 → Tenten8223+Enter（1文字ずつ）",
                                 "from": { "key_code": "f4" },
-                                "to": [{ "shell_command": "osascript -e 'tell application \"System Events\"' -e 'keystroke \"Tenten8223\"' -e 'keystroke return' -e 'end tell'" }],
+                                "to": [{ "shell_command": "osascript -e 'tell application \"System Events\"' -e 'set s to \"Tenten8223\"' -e 'repeat with i from 1 to length of s' -e 'keystroke character i of s' -e 'end repeat' -e 'keystroke return' -e 'end tell'" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 671,
+                                                "vendor_id": 76
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "F7 → Option+H",
+                                "from": { "key_code": "f7" },
+                                "to": [
+                                    {
+                                        "key_code": "h",
+                                        "modifiers": ["left_option"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -1063,7 +1267,8 @@
                         "vendor_id": 1452
                     },
                     "ignore": false,
-                    "manipulate_caps_lock_led": false
+                    "manipulate_caps_lock_led": false,
+                    "simple_modifications": []
                 },
                 {
                     "identifiers": {
