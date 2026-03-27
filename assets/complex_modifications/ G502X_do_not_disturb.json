@@ -1,0 +1,22 @@
+{
+    "description": "Disable do_not_disturb from Logitech G502X",
+    "manipulators": [
+        {
+            "type": "basic",
+            "from": {
+                "consumer_key_code": "do_not_disturb"
+            },
+            "conditions": [
+                {
+                    "type": "device_if",
+                    "identifiers": [
+                        {
+                            "vendor_id": 1133,
+                            "product_id": 50503
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

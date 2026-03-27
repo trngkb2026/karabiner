@@ -4,6 +4,43 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Block do_not_disturb from Logitech USB Receiver (all event types)",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 50503,
+                                                "vendor_id": 1133
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "consumer_key_code": "do_not_disturb" },
+                                "to": [],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 50503,
+                                                "vendor_id": 1133
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "do_not_disturb" },
+                                "to": [],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "8BitDo Zero 2 - 全ボタン設定",
                         "manipulators": [
                             {
@@ -18,12 +55,9 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "↑ → テンキー3+Enter",
+                                "description": "↑ → →矢印",
                                 "from": { "key_code": "c" },
-                                "to": [
-                                    { "key_code": "keypad_3" },
-                                    { "key_code": "return_or_enter" }
-                                ],
+                                "to": [{ "key_code": "right_arrow" }],
                                 "type": "basic"
                             },
                             {
@@ -38,12 +72,9 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "↓ → テンキー1+Enter",
+                                "description": "↓ → ←矢印",
                                 "from": { "key_code": "d" },
-                                "to": [
-                                    { "key_code": "keypad_1" },
-                                    { "key_code": "return_or_enter" }
-                                ],
+                                "to": [{ "key_code": "left_arrow" }],
                                 "type": "basic"
                             },
                             {
@@ -58,12 +89,9 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "← → テンキー2+Enter",
+                                "description": "← → ↑矢印",
                                 "from": { "key_code": "e" },
-                                "to": [
-                                    { "key_code": "keypad_2" },
-                                    { "key_code": "return_or_enter" }
-                                ],
+                                "to": [{ "key_code": "up_arrow" }],
                                 "type": "basic"
                             },
                             {
@@ -78,12 +106,9 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "→ → テンキー4+Enter",
+                                "description": "→ → ↓矢印",
                                 "from": { "key_code": "f" },
-                                "to": [
-                                    { "key_code": "keypad_4" },
-                                    { "key_code": "return_or_enter" }
-                                ],
+                                "to": [{ "key_code": "down_arrow" }],
                                 "type": "basic"
                             },
                             {
@@ -98,9 +123,14 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "Y → Escape",
+                                "description": "Y → ⌘+Shift+Option+H",
                                 "from": { "key_code": "i" },
-                                "to": [{ "key_code": "escape" }],
+                                "to": [
+                                    {
+                                        "key_code": "h",
+                                        "modifiers": ["command", "shift", "option"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -115,9 +145,9 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "A → スペース",
+                                "description": "A → F13",
                                 "from": { "key_code": "g" },
-                                "to": [{ "key_code": "spacebar" }],
+                                "to": [{ "key_code": "print_screen" }],
                                 "type": "basic"
                             },
                             {
@@ -132,14 +162,9 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "X → ⌘+^+V（Clipy等）",
+                                "description": "X → End",
                                 "from": { "key_code": "h" },
-                                "to": [
-                                    {
-                                        "key_code": "v",
-                                        "modifiers": ["command", "control"]
-                                    }
-                                ],
+                                "to": [{ "key_code": "end" }],
                                 "type": "basic"
                             },
                             {
@@ -154,14 +179,9 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "B → ⌘+右Shift+2",
+                                "description": "B → Home",
                                 "from": { "key_code": "j" },
-                                "to": [
-                                    {
-                                        "key_code": "2",
-                                        "modifiers": ["command", "right_shift"]
-                                    }
-                                ],
+                                "to": [{ "key_code": "home" }],
                                 "type": "basic"
                             },
                             {
@@ -176,25 +196,8 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "L → 左Shift",
+                                "description": "L → Backspace",
                                 "from": { "key_code": "k" },
-                                "to": [{ "key_code": "left_shift" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 36888,
-                                                "vendor_id": 11720
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "description": "R → Backspace",
-                                "from": { "key_code": "m" },
                                 "to": [{ "key_code": "delete_or_backspace" }],
                                 "type": "basic"
                             },
@@ -210,12 +213,12 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "Select → ⌘+A",
-                                "from": { "key_code": "n" },
+                                "description": "R → Shift+Enter",
+                                "from": { "key_code": "m" },
                                 "to": [
                                     {
-                                        "key_code": "a",
-                                        "modifiers": ["command"]
+                                        "key_code": "return_or_enter",
+                                        "modifiers": ["shift"]
                                     }
                                 ],
                                 "type": "basic"
@@ -232,20 +235,32 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "Start → ⌘+X",
+                                "description": "Select → 音声入力",
+                                "from": { "key_code": "n" },
+                                "to": [{ "consumer_key_code": "dictation" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 36888,
+                                                "vendor_id": 11720
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "Start → Escape",
                                 "from": { "key_code": "o" },
-                                "to": [
-                                    {
-                                        "key_code": "x",
-                                        "modifiers": ["command"]
-                                    }
-                                ],
+                                "to": [{ "key_code": "escape" }],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "description": "K02 BLE Keyboard - æ•°å­—ã‚­ãƒ¼åŠè§’åŒ–ï¼ˆShift+æ•°å­—ã¯è¨˜å·ï¼‰",
+                        "description": "Ewin X8 - カスタム設定",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -257,228 +272,6 @@
                                             }
                                         ],
                                         "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "0",
-                                    "modifiers": { "optional": ["caps_lock"] }
-                                },
-                                "to": [{ "key_code": "keypad_0" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "1",
-                                    "modifiers": { "optional": ["caps_lock"] }
-                                },
-                                "to": [{ "key_code": "keypad_1" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "2",
-                                    "modifiers": { "optional": ["caps_lock"] }
-                                },
-                                "to": [{ "key_code": "keypad_2" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "3",
-                                    "modifiers": { "optional": ["caps_lock"] }
-                                },
-                                "to": [{ "key_code": "keypad_3" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "4",
-                                    "modifiers": { "optional": ["caps_lock"] }
-                                },
-                                "to": [{ "key_code": "keypad_4" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "5",
-                                    "modifiers": { "optional": ["caps_lock"] }
-                                },
-                                "to": [{ "key_code": "keypad_5" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "6",
-                                    "modifiers": { "optional": ["caps_lock"] }
-                                },
-                                "to": [{ "key_code": "keypad_6" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "7",
-                                    "modifiers": { "optional": ["caps_lock"] }
-                                },
-                                "to": [{ "key_code": "keypad_7" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "8",
-                                    "modifiers": { "optional": ["caps_lock"] }
-                                },
-                                "to": [{ "key_code": "keypad_8" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "9",
-                                    "modifiers": { "optional": ["caps_lock"] }
-                                },
-                                "to": [{ "key_code": "keypad_9" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "K02 BLE Keyboard - Caps Lock → 英数/かなトグル",
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    },
-                                    {
-                                        "input_sources": [{ "language": "ja" }],
-                                        "type": "input_source_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "caps_lock",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [{ "key_code": "japanese_eisuu" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "identifiers": [
-                                            {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
-                                            }
-                                        ],
-                                        "type": "device_if"
-                                    },
-                                    {
-                                        "input_sources": [{ "language": "en" }],
-                                        "type": "input_source_if"
                                     }
                                 ],
                                 "from": {
@@ -491,26 +284,28 @@
                         ]
                     },
                     {
-                        "description": "K02 BLE Keyboard - 地球ボタン・ボタン2設定",
+                        "description": "Magic Keyboard - カスタム設定",
                         "manipulators": [
                             {
                                 "conditions": [
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
+                                                "product_id": 671,
+                                                "vendor_id": 76
                                             }
                                         ],
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "left_control無効化",
-                                "from": {
-                                    "key_code": "left_control",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [{ "key_code": "vk_none" }],
+                                "description": "F3 → Control+K",
+                                "from": { "key_code": "f3" },
+                                "to": [
+                                    {
+                                        "key_code": "k",
+                                        "modifiers": ["control"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -518,19 +313,16 @@
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
+                                                "product_id": 671,
+                                                "vendor_id": 76
                                             }
                                         ],
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "地球ボタン → Spotlight",
-                                "from": {
-                                    "key_code": "spacebar",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [{ "apple_vendor_keyboard_key_code": "spotlight" }],
+                                "description": "F4 → Tenten8223+Enter",
+                                "from": { "key_code": "f4" },
+                                "to": [{ "shell_command": "osascript -e 'tell application \"System Events\"' -e 'keystroke \"Tenten8223\"' -e 'keystroke return' -e 'end tell'" }],
                                 "type": "basic"
                             },
                             {
@@ -538,21 +330,631 @@
                                     {
                                         "identifiers": [
                                             {
-                                                "product_id": 599,
-                                                "vendor_id": 1452
+                                                "product_id": 671,
+                                                "vendor_id": 76
                                             }
                                         ],
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "ボタン2 → スペース4回+Enter",
-                                "from": { "pointing_button": "button2" },
+                                "description": "F19 → スリープ",
+                                "from": { "key_code": "f19" },
+                                "to": [{ "shell_command": "pmset sleepnow" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 671,
+                                                "vendor_id": 76
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "右Control → Space×4+Enter",
+                                "from": {
+                                    "key_code": "right_control",
+                                    "modifiers": { "optional": ["any"] }
+                                },
                                 "to": [
                                     { "key_code": "spacebar" },
                                     { "key_code": "spacebar" },
                                     { "key_code": "spacebar" },
                                     { "key_code": "spacebar" },
                                     { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 671,
+                                                "vendor_id": 76
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "右Option → Spotlight",
+                                "from": {
+                                    "key_code": "right_option",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "apple_vendor_keyboard_key_code": "spotlight" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "TENBT03 (MCO) - カスタム設定",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "escape" },
+                                "to": [{ "consumer_key_code": "dictation" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "f2" },
+                                "to": [
+                                    {
+                                        "key_code": "t",
+                                        "modifiers": ["shift"]
+                                    },
+                                    { "key_code": "e" },
+                                    { "key_code": "n" },
+                                    { "key_code": "t" },
+                                    { "key_code": "e" },
+                                    { "key_code": "n" },
+                                    { "key_code": "keypad_8" },
+                                    { "key_code": "keypad_2" },
+                                    { "key_code": "keypad_2" },
+                                    { "key_code": "keypad_3" },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "8",
+                                    "modifiers": {
+                                        "mandatory": ["shift"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "x",
+                                        "modifiers": ["command", "right_shift"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "9",
+                                    "modifiers": {
+                                        "mandatory": ["shift"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "h",
+                                        "modifiers": ["command", "shift", "option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "delete_forward" },
+                                "to": [
+                                    { "key_code": "spacebar" },
+                                    { "key_code": "spacebar" },
+                                    { "key_code": "spacebar" },
+                                    { "key_code": "spacebar" },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "left_option" },
+                                "to": [
+                                    {
+                                        "key_code": "keypad_1",
+                                        "modifiers": ["option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "left_control" },
+                                "to": [
+                                    {
+                                        "key_code": "keypad_2",
+                                        "modifiers": ["option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "equal_sign" },
+                                "to": [
+                                    {
+                                        "key_code": "v",
+                                        "modifiers": ["command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_slash" },
+                                "to": [
+                                    {
+                                        "key_code": "return_or_enter",
+                                        "modifiers": ["command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "left_shift" },
+                                "to": [{ "key_code": "japanese_eisuu" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "tab" },
+                                "to": [{ "key_code": "japanese_kana" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_7" },
+                                "to": [
+                                    { "key_code": "keypad_7" },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_8" },
+                                "to": [
+                                    { "key_code": "keypad_8" },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_9" },
+                                "to": [
+                                    { "key_code": "keypad_9" },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_hyphen" },
+                                "to": [
+                                    {
+                                        "key_code": "comma",
+                                        "modifiers": ["command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_4" },
+                                "to": [
+                                    { "key_code": "keypad_4" },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_5" },
+                                "to": [
+                                    { "key_code": "keypad_5" },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_6" },
+                                "to": [
+                                    { "key_code": "keypad_6" },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "left_arrow" },
+                                "to": [
+                                    {
+                                        "key_code": "left_arrow",
+                                        "modifiers": ["command", "option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "right_arrow" },
+                                "to": [
+                                    {
+                                        "key_code": "right_arrow",
+                                        "modifiers": ["command", "option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_1" },
+                                "to": [{ "key_code": "return_or_enter" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_2" },
+                                "to": [
+                                    { "key_code": "keypad_2" },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_3" },
+                                "to": [
+                                    { "key_code": "keypad_3" },
+                                    { "key_code": "return_or_enter" }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_enter" },
+                                "to": [{ "key_code": "spacebar" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_0" },
+                                "to": [
+                                    {
+                                        "key_code": "return_or_enter",
+                                        "modifiers": ["shift"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_period" },
+                                "to": [{ "key_code": "delete_or_backspace" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "keypad_plus" },
+                                "to": [
+                                    {
+                                        "key_code": "c",
+                                        "modifiers": ["control"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 12427,
+                                                "vendor_id": 9427
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": { "key_code": "f4" },
+                                "to": [
+                                    {
+                                        "key_code": "f13",
+                                        "modifiers": ["shift"]
+                                    }
                                 ],
                                 "type": "basic"
                             }
@@ -570,478 +972,88 @@
                         {
                             "from": { "key_code": "f2" },
                             "to": [{ "key_code": "f2" }]
+                        }
+                    ],
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "product_id": 671,
+                        "vendor_id": 76
+                    },
+                    "manipulate_caps_lock_led": false,
+                    "simple_modifications": [
+                        {
+                            "from": { "key_code": "caps_lock" },
+                            "to": [{ "key_code": "left_option" }]
                         },
                         {
-                            "from": { "key_code": "f3" },
-                            "to": [{ "key_code": "f3" }]
+                            "from": { "key_code": "f1" },
+                            "to": [{ "key_code": "print_screen" }]
+                        },
+                        {
+                            "from": { "key_code": "left_option" },
+                            "to": [{ "apple_vendor_keyboard_key_code": "spotlight" }]
+                        },
+                        {
+                            "from": { "key_code": "right_option" },
+                            "to": [{ "consumer_key_code": "dictation" }]
+                        }
+                    ]
+                },
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "is_pointing_device": true,
+                        "product_id": 12427,
+                        "vendor_id": 9427
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": false,
+                    "simple_modifications": [
+                        {
+                            "from": { "key_code": "escape" },
+                            "to": [{ "consumer_key_code": "dictation" }]
                         },
                         {
                             "from": { "key_code": "f4" },
-                            "to": [{ "key_code": "f4" }]
+                            "to": [{ "apple_vendor_keyboard_key_code": "spotlight" }]
                         },
                         {
-                            "from": { "key_code": "f5" },
-                            "to": [{ "key_code": "f5" }]
-                        },
-                        {
-                            "from": { "key_code": "f6" },
-                            "to": [{ "key_code": "f6" }]
-                        },
-                        {
-                            "from": { "key_code": "f7" },
-                            "to": [{ "key_code": "f7" }]
-                        },
-                        {
-                            "from": { "key_code": "f8" },
-                            "to": [{ "key_code": "f8" }]
-                        },
-                        {
-                            "from": { "key_code": "f9" },
-                            "to": [{ "key_code": "f9" }]
-                        },
-                        {
-                            "from": { "key_code": "f10" },
-                            "to": [{ "key_code": "f10" }]
-                        },
-                        {
-                            "from": { "key_code": "f11" },
-                            "to": [{ "key_code": "f11" }]
-                        },
-                        {
-                            "from": { "key_code": "f12" },
-                            "to": [{ "key_code": "f12" }]
-                        }
-                    ],
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 834,
-                        "vendor_id": 1452
-                    },
-                    "ignore": true
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 593,
-                        "vendor_id": 1452
-                    },
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "caps_lock" },
-                            "to": [{ "pointing_button": "button30" }]
-                        },
-                        {
-                            "from": { "key_code": "right_option" },
-                            "to": [{ "pointing_button": "button29" }]
-                        }
-                    ]
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 49291,
-                        "vendor_id": 1133
-                    },
-                    "ignore": true
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 33639,
-                        "vendor_id": 9354
-                    },
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "0" },
-                            "to": [{ "pointing_button": "button13" }]
-                        },
-                        {
-                            "from": { "key_code": "1" },
-                            "to": [{ "pointing_button": "button14" }]
-                        },
-                        {
-                            "from": { "key_code": "2" },
-                            "to": [{ "pointing_button": "button15" }]
-                        },
-                        {
-                            "from": { "key_code": "3" },
-                            "to": [{ "pointing_button": "button16" }]
-                        },
-                        {
-                            "from": { "key_code": "4" },
-                            "to": [{ "pointing_button": "button17" }]
-                        },
-                        {
-                            "from": { "key_code": "5" },
-                            "to": [{ "pointing_button": "button18" }]
-                        },
-                        {
-                            "from": { "key_code": "6" },
-                            "to": [{ "pointing_button": "button19" }]
-                        },
-                        {
-                            "from": { "key_code": "7" },
-                            "to": [{ "pointing_button": "button20" }]
-                        },
-                        {
-                            "from": { "key_code": "8" },
-                            "to": [{ "pointing_button": "button21" }]
-                        },
-                        {
-                            "from": { "key_code": "9" },
-                            "to": [{ "pointing_button": "button22" }]
-                        },
-                        {
-                            "from": { "key_code": "delete_forward" },
-                            "to": [{ "pointing_button": "button23" }]
-                        },
-                        {
-                            "from": { "key_code": "delete_or_backspace" },
-                            "to": [{ "pointing_button": "button24" }]
-                        },
-                        {
-                            "from": { "key_code": "escape" },
-                            "to": [{ "pointing_button": "button25" }]
+                            "from": { "key_code": "grave_accent_and_tilde" },
+                            "to": [{ "consumer_key_code": "volume_increment" }]
                         },
                         {
                             "from": { "key_code": "keypad_asterisk" },
-                            "to": [{ "pointing_button": "button26" }]
+                            "to": [{ "key_code": "mission_control" }]
                         },
                         {
                             "from": { "key_code": "keypad_enter" },
-                            "to": [{ "pointing_button": "button27" }]
+                            "to": [{ "key_code": "spacebar" }]
                         },
                         {
-                            "from": { "key_code": "keypad_hyphen" },
-                            "to": [{ "pointing_button": "button28" }]
+                            "from": { "key_code": "keypad_period" },
+                            "to": [{ "key_code": "delete_or_backspace" }]
                         },
                         {
                             "from": { "key_code": "keypad_plus" },
-                            "to": [{ "pointing_button": "button29" }]
+                            "to": [{ "consumer_key_code": "dictation" }]
                         },
                         {
-                            "from": { "key_code": "keypad_slash" },
-                            "to": [{ "pointing_button": "button30" }]
-                        },
-                        {
-                            "from": { "key_code": "period" },
-                            "to": [{ "pointing_button": "button31" }]
+                            "from": { "key_code": "left_shift" },
+                            "to": [{ "key_code": "japanese_eisuu" }]
                         },
                         {
                             "from": { "key_code": "tab" },
-                            "to": [{ "pointing_button": "button32" }]
+                            "to": [{ "key_code": "japanese_kana" }]
                         }
                     ]
                 },
                 {
                     "identifiers": {
                         "is_pointing_device": true,
-                        "product_id": 33639,
-                        "vendor_id": 9354
-                    },
-                    "ignore": false,
-                    "simple_modifications": [
-                        {
-                            "from": { "consumer_key_code": "al_calculator" },
-                            "to": [{ "consumer_key_code": "al_calculator" }]
-                        }
-                    ]
-                },
-                {
-                    "fn_function_keys": [
-                        {
-                            "from": { "key_code": "f1" },
-                            "to": [{ "key_code": "f1" }]
-                        },
-                        {
-                            "from": { "key_code": "f2" },
-                            "to": [{ "key_code": "f2" }]
-                        },
-                        {
-                            "from": { "key_code": "f5" },
-                            "to": [{ "key_code": "f7" }]
-                        }
-                    ],
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 666,
-                        "vendor_id": 76
-                    }
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 64097,
-                        "vendor_id": 9639
-                    },
-                    "ignore": true,
-                    "manipulate_caps_lock_led": false
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 50475,
+                        "product_id": 50503,
                         "vendor_id": 1133
                     },
-                    "ignore": true,
-                    "manipulate_caps_lock_led": false
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 34304,
-                        "vendor_id": 1452
-                    },
-                    "ignore": true
-                },
-                {
-                    "disable_built_in_keyboard_if_exists": true,
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 50504,
-                        "vendor_id": 1133
-                    },
-                    "ignore": true
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "is_pointing_device": true,
-                        "product_id": 2102,
-                        "vendor_id": 1118
-                    },
-                    "ignore": false,
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "keypad_num_lock" },
-                            "to": [{ "key_code": "vk_none" }]
-                        }
-                    ]
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 620,
-                        "vendor_id": 76
-                    },
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "caps_lock" },
-                            "to": [{ "key_code": "delete_or_backspace" }]
-                        },
-                        {
-                            "from": { "key_code": "f18" },
-                            "to": [{ "pointing_button": "button29" }]
-                        },
-                        {
-                            "from": { "key_code": "right_control" },
-                            "to": [{ "key_code": "f1" }]
-                        },
-                        {
-                            "from": { "key_code": "right_option" },
-                            "to": [{ "pointing_button": "button19" }]
-                        }
-                    ]
-                },
-                {
-                    "fn_function_keys": [
-                        {
-                            "from": { "key_code": "f1" },
-                            "to": [{ "key_code": "f1" }]
-                        },
-                        {
-                            "from": { "key_code": "f2" },
-                            "to": [{ "key_code": "f2" }]
-                        }
-                    ],
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 671,
-                        "vendor_id": 76
-                    },
-                    "manipulate_caps_lock_led": false,
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "caps_lock" },
-                            "to": [{ "key_code": "left_option" }]
-                        },
-                        {
-                            "from": { "key_code": "right_control" },
-                            "to": [{ "consumer_key_code": "dictation" }]
-                        },
-                        {
-                            "from": { "key_code": "right_option" },
-                            "to": [{ "pointing_button": "button28" }]
-                        }
-                    ]
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 801,
-                        "vendor_id": 76
-                    },
-                    "simple_modifications": [
-                        {
-                            "from": { "apple_vendor_top_case_key_code": "keyboard_fn" },
-                            "to": [{ "pointing_button": "button32" }]
-                        },
-                        {
-                            "from": { "key_code": "caps_lock" },
-                            "to": [{ "key_code": "delete_or_backspace" }]
-                        },
-                        {
-                            "from": { "key_code": "right_option" },
-                            "to": [{ "pointing_button": "button28" }]
-                        }
-                    ],
-                    "treat_as_built_in_keyboard": true
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 671,
-                        "vendor_id": 1452
-                    },
-                    "manipulate_caps_lock_led": false,
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "right_control" },
-                            "to": [{ "pointing_button": "button31" }]
-                        },
-                        {
-                            "from": { "key_code": "right_option" },
-                            "to": [{ "pointing_button": "button32" }]
-                        }
-                    ]
-                },
-                {
-                    "disable_built_in_keyboard_if_exists": true,
-                    "fn_function_keys": [
-                        {
-                            "from": { "key_code": "f1" },
-                            "to": [{ "key_code": "f1" }]
-                        },
-                        {
-                            "from": { "key_code": "f5" },
-                            "to": [{ "key_code": "f1" }]
-                        },
-                        {
-                            "from": { "key_code": "f8" },
-                            "to": [{ "key_code": "f1" }]
-                        },
-                        {
-                            "from": { "key_code": "f9" },
-                            "to": [{ "key_code": "f1" }]
-                        },
-                        {
-                            "from": { "key_code": "f10" },
-                            "to": [{ "key_code": "f1" }]
-                        },
-                        {
-                            "from": { "key_code": "f11" },
-                            "to": [{ "key_code": "f1" }]
-                        },
-                        {
-                            "from": { "key_code": "f12" },
-                            "to": [{ "key_code": "f1" }]
-                        }
-                    ],
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 24814,
-                        "vendor_id": 6127
-                    },
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "left_option" },
-                            "to": [{ "key_code": "left_command" }]
-                        },
-                        {
-                            "from": { "key_code": "right_option" },
-                            "to": [{ "key_code": "right_command" }]
-                        }
-                    ]
-                },
-                {
-                    "fn_function_keys": [
-                        {
-                            "from": { "key_code": "f7" },
-                            "to": [{ "key_code": "caps_lock" }]
-                        },
-                        {
-                            "from": { "key_code": "f8" },
-                            "to": [{ "key_code": "caps_lock" }]
-                        },
-                        {
-                            "from": { "key_code": "f9" },
-                            "to": [{ "key_code": "caps_lock" }]
-                        },
-                        {
-                            "from": { "key_code": "f10" },
-                            "to": [{ "key_code": "caps_lock" }]
-                        },
-                        {
-                            "from": { "key_code": "f11" },
-                            "to": [{ "key_code": "caps_lock" }]
-                        },
-                        {
-                            "from": { "key_code": "f12" },
-                            "to": [{ "key_code": "caps_lock" }]
-                        }
-                    ],
-                    "identifiers": {
-                        "is_pointing_device": true,
-                        "product_id": 24814,
-                        "vendor_id": 6127
-                    }
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "is_pointing_device": true,
-                        "product_id": 1889,
-                        "vendor_id": 13364
-                    },
-                    "manipulate_caps_lock_led": false
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "is_pointing_device": true,
-                        "product_id": 53287,
-                        "vendor_id": 13364
-                    },
-                    "manipulate_caps_lock_led": false
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 800,
-                        "vendor_id": 76
-                    },
-                    "simple_modifications": [
-                        {
-                            "from": { "consumer_key_code": "al_terminal_lock_or_screensaver" },
-                            "to": [{ "key_code": "delete_forward" }]
-                        },
-                        {
-                            "from": { "key_code": "caps_lock" },
-                            "to": [{ "key_code": "left_option" }]
-                        },
-                        {
-                            "from": { "key_code": "f10" },
-                            "to": [{ "pointing_button": "button28" }]
-                        },
-                        {
-                            "from": { "key_code": "fn" },
-                            "to": [{ "pointing_button": "button30" }]
-                        },
-                        {
-                            "from": { "key_code": "left_option" },
-                            "to": [{ "consumer_key_code": "dictation" }]
-                        }
-                    ]
+                    "ignore_vendor_events": true
                 },
                 {
                     "identifiers": {
@@ -1051,39 +1063,20 @@
                         "vendor_id": 1452
                     },
                     "ignore": false,
-                    "pointing_motion_wheels_multiplier": 1.1,
-                    "pointing_motion_xy_multiplier": 1.1,
+                    "manipulate_caps_lock_led": false
+                },
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "product_id": 36897,
+                        "vendor_id": 11720
+                    },
                     "simple_modifications": [
                         {
-                            "from": { "consumer_key_code": "mute" },
-                            "to": [{ "key_code": "m", "modifiers": ["command", "shift"] }]
-                        },
-                        {
-                            "from": { "consumer_key_code": "play_or_pause" },
-                            "to": [{ "key_code": "f11" }]
-                        },
-                        {
-                            "from": { "consumer_key_code": "scan_next_track" },
-                            "to": [{ "key_code": "f3" }]
-                        },
-                        {
-                            "from": { "consumer_key_code": "scan_previous_track" },
-                            "to": [{ "key_code": "l", "modifiers": ["command", "shift"] }]
-                        },
-                        {
-                            "from": { "consumer_key_code": "volume_decrement" },
-                            "to": [{ "key_code": "f6" }]
-                        },
-                        {
-                            "from": { "consumer_key_code": "volume_increment" },
-                            "to": [{ "key_code": "2", "modifiers": ["command", "shift"] }]
-                        },
-                        {
-                            "from": { "pointing_button": "button1" },
+                            "from": { "key_code": "f20" },
                             "to": [{ "consumer_key_code": "dictation" }]
                         }
-                    ],
-                    "treat_as_built_in_keyboard": true
+                    ]
                 }
             ],
             "fn_function_keys": [

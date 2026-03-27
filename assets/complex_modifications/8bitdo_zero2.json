@@ -1,0 +1,167 @@
+{
+  "title": "8BitDo Zero 2 左手デバイス",
+  "rules": [
+    {
+      "description": "8BitDo Zero 2 - 全ボタン設定",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": { "key_code": "c" },
+          "to": [
+            { "key_code": "keypad_3" },
+            { "key_code": "return_or_enter" }
+          ],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "↑ → テンキー3 + Enter"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "d" },
+          "to": [
+            { "key_code": "keypad_1" },
+            { "key_code": "return_or_enter" }
+          ],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "↓ → テンキー1 + Enter"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "e" },
+          "to": [
+            { "key_code": "keypad_2" },
+            { "key_code": "return_or_enter" }
+          ],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "← → テンキー2 + Enter"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "f" },
+          "to": [
+            { "key_code": "keypad_4" },
+            { "key_code": "return_or_enter" }
+          ],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "→ → テンキー4 + Enter"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "i" },
+          "to": [{ "key_code": "escape" }],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "Y → Escape"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "g" },
+          "to": [{ "key_code": "a", "modifiers": ["command"] }],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "A → ⌘+A（全選択）"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "h" },
+          "to": [{ "key_code": "v", "modifiers": ["command", "control"] }],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "X → ⌘+^+V（Clipy等）"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "j" },
+          "to": [{ "key_code": "japanese_kana" }],
+          "to_if_held_down": [{ "key_code": "japanese_eisuu" }],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "B → 英数/かなトグル"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "k" },
+          "to": [{ "key_code": "left_shift" }],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "L → 左Shift"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "m" },
+          "to": [{ "key_code": "delete_or_backspace" }],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "R → Backspace"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "n" },
+          "to": [{ "key_code": "return_or_enter" }],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "Select → Enter"
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "o" },
+          "to": [{ "key_code": "2", "modifiers": ["command", "shift"] }],
+          "conditions": [
+            {
+              "type": "device_if",
+              "identifiers": [{ "vendor_id": 11720, "product_id": 36888 }]
+            }
+          ],
+          "description": "Start → ⌘+Shift+2"
+        }
+      ]
+    }
+  ]
+}
