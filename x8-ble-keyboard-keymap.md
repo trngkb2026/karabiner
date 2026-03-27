@@ -23,6 +23,8 @@ Karabiner-Elements の設定（`karabiner.json`）における **X8 BLE Keyboard
 | 4 | `application` キー | アプリケーションのウィンドウ（osascript: Control + ↓、key code 125） |
 | 5 | Consumer `ac_home` | デスクトップ表示（osascript: F11 相当、key code 103） |
 | 6 | Consumer `mute` | Mission Control（`mission_control`） |
+| 7 | Consumer `volume_decrement`（音量下げ） | Option + V |
+| 8 | Consumer `volume_increment`（音量上げ） | Shift + Option + V |
 
 ## デバイス別 Simple Modifications
 

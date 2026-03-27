@@ -390,11 +390,7 @@
                                     "key_code": "application",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [
-                                    {
-                                        "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to key code 125 using control down'"
-                                    }
-                                ],
+                                "to": [{ "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to key code 125 using control down'" }],
                                 "type": "basic"
                             },
                             {
@@ -414,11 +410,7 @@
                                     "consumer_key_code": "ac_home",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [
-                                    {
-                                        "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to key code 103'"
-                                    }
-                                ],
+                                "to": [{ "shell_command": "/usr/bin/osascript -e 'tell application \"System Events\" to key code 103'" }],
                                 "type": "basic"
                             },
                             {
@@ -439,6 +431,56 @@
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [{ "key_code": "mission_control" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "音量下げ（Consumer）→ Option+V",
+                                "from": {
+                                    "consumer_key_code": "volume_decrement",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "v",
+                                        "modifiers": ["option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "音量上げ（Consumer）→ Shift+Option+V",
+                                "from": {
+                                    "consumer_key_code": "volume_increment",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "v",
+                                        "modifiers": ["option", "shift"]
+                                    }
+                                ],
                                 "type": "basic"
                             }
                         ]
@@ -1267,8 +1309,7 @@
                         "vendor_id": 1452
                     },
                     "ignore": false,
-                    "manipulate_caps_lock_led": false,
-                    "simple_modifications": []
+                    "manipulate_caps_lock_led": false
                 },
                 {
                     "identifiers": {
