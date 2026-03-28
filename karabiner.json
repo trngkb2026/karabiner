@@ -4,6 +4,60 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Space: 単発でスペース / 長押し・併用で Command（全キーボード）",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": { "optional": ["caps_lock"] }
+                                },
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 400,
+                                    "basic.to_if_held_down_threshold_milliseconds": 250
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_command",
+                                        "lazy": true
+                                    }
+                                ],
+                                "to_if_alone": [{ "key_code": "spacebar" }],
+                                "to_if_held_down": [{ "key_code": "left_command" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "X8 BLE: Fn+トラックパッド移動→スクロール（speed_multiplier 2.0）",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "is_pointing_device": true,
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "from": {
+                                    "modifiers": {
+                                        "mandatory": ["fn"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "options": {
+                                    "momentum_scroll_enabled": true,
+                                    "speed_multiplier": 2.0
+                                },
+                                "type": "mouse_motion_to_scroll"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Block do_not_disturb from Logitech USB Receiver (all event types)",
                         "manipulators": [
                             {
@@ -360,15 +414,35 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "ボタン3（ポインティング）→ ⌘W",
+                                "description": "ボタン2（ポインティング）→ Enter",
+                                "from": {
+                                    "modifiers": { "optional": ["any"] },
+                                    "pointing_button": "button2"
+                                },
+                                "to": [{ "key_code": "return_or_enter" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "ボタン3（ポインティング）→ ⌘+左クリック",
                                 "from": {
                                     "modifiers": { "optional": ["any"] },
                                     "pointing_button": "button3"
                                 },
                                 "to": [
                                     {
-                                        "key_code": "w",
-                                        "modifiers": ["command"]
+                                        "modifiers": ["left_command"],
+                                        "pointing_button": "button1"
                                     }
                                 ],
                                 "type": "basic"
@@ -481,6 +555,46 @@
                                         "modifiers": ["option", "shift"]
                                     }
                                 ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "左 Command → F13",
+                                "from": {
+                                    "key_code": "left_command",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "f13" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "identifiers": [
+                                            {
+                                                "product_id": 599,
+                                                "vendor_id": 1452
+                                            }
+                                        ],
+                                        "type": "device_if"
+                                    }
+                                ],
+                                "description": "右 Command → F13",
+                                "from": {
+                                    "key_code": "right_command",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "f13" }],
                                 "type": "basic"
                             }
                         ]
@@ -1205,6 +1319,22 @@
                                 "type": "basic"
                             }
                         ]
+                    },
+                    {
+                        "description": "⌘W → スペース",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "w",
+                                    "modifiers": {
+                                        "mandatory": ["command"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [{ "key_code": "spacebar" }],
+                                "type": "basic"
+                            }
+                        ]
                     }
                 ]
             },
@@ -1309,7 +1439,9 @@
                         "vendor_id": 1452
                     },
                     "ignore": false,
-                    "manipulate_caps_lock_led": false
+                    "manipulate_caps_lock_led": false,
+                    "pointing_motion_wheels_multiplier": 10.0,
+                    "pointing_motion_xy_multiplier": 2.0
                 },
                 {
                     "identifiers": {
@@ -1323,6 +1455,14 @@
                             "to": [{ "consumer_key_code": "dictation" }]
                         }
                     ]
+                },
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "product_id": 50503,
+                        "vendor_id": 1133
+                    },
+                    "manipulate_caps_lock_led": false
                 }
             ],
             "fn_function_keys": [
