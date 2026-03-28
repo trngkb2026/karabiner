@@ -1,8 +1,18 @@
 name: Claude Code Review
 
+# Model: Sonnet (not Opus)
+# Reason: Opus is reserved for PM/planning tasks.
+# Review, lint fix, and focused code tasks perform equally well on Sonnet
+# at 60% lower cost and without consuming the Opus rate pool.
+# See: https://linear.app/claude-code-cowork/document/auto-pilot-実行プラン-v1pm分析-2026-03-28-e00b73d3cf61
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -18,6 +28,8 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          model: claude-sonnet-4-6
+          claude_args: "--model sonnet"
           prompt: |
             Review this PR against the following criteria (priority order):
 
