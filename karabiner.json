@@ -842,7 +842,7 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "音量下げ（Consumer）→ F13",
+                                "description": "音量下げ（Consumer）→ Option+V",
                                 "from": {
                                     "consumer_key_code": "volume_decrement",
                                     "modifiers": {
@@ -851,7 +851,12 @@
                                         ]
                                     }
                                 },
-                                "to": [{ "key_code": "f13" }],
+                                "to": [
+                                    {
+                                        "key_code": "v",
+                                        "modifiers": ["option"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -866,7 +871,7 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "音量上げ（Consumer）→ Shift+F13",
+                                "description": "音量上げ（Consumer）→ Shift+Option+V",
                                 "from": {
                                     "consumer_key_code": "volume_increment",
                                     "modifiers": {
@@ -877,8 +882,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "f13",
-                                        "modifiers": ["shift"]
+                                        "key_code": "v",
+                                        "modifiers": ["option", "shift"]
                                     }
                                 ],
                                 "type": "basic"
