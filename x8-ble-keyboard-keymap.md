@@ -20,17 +20,21 @@ Karabiner-Elements の設定（`karabiner.json`）における **X8 BLE Keyboard
 
 | #   | 入力                                | 出力・動作                                               |
 | --- | --------------------------------- | --------------------------------------------------- |
-| 1   | Caps Lock                         | 英数 ⇔ かなのトグル（内部変数 `x8_ble_caps_ime`）                 |
-| 2   | ポインティング button1（左クリック相当）          | 音声入力（dictation）                                     |
-| 3   | ポインティング button2（右クリック相当）          | Enter（`return_or_enter`）                             |
-| 4   | ポインティング button3（中クリック相当のことが多い）    | ⌘+左クリック（`button1` + `left_command`）                |
-| 5   | `application` キー                  | アプリケーションのウィンドウ（osascript: Control + ↓、key code 125） |
-| 6   | Consumer `ac_home`                | デスクトップ表示（osascript: F11 相当、key code 103）            |
-| 7   | Consumer `mute`                   | Mission Control（`mission_control`）                  |
-| 8   | Consumer `volume_decrement`（音量下げ） | Option + V                                          |
-| 9   | Consumer `volume_increment`（音量上げ） | Shift + Option + V                                  |
-| 10  | 左 Command                         | F13                                                 |
-| 11  | 右 Command                         | F13                                                 |
+| 1   | F1                                | F13                                                 |
+| 2   | F2                                | Shift + F13                                         |
+| 3   | F3                                | Control + K                                         |
+| 4   | F4                                | Shift+T,E,N,T,E,N + テンキー 8,2,2,3 + Enter（1キーずつ）      |
+| 5   | Caps Lock                         | 英数 ⇔ かなのトグル（内部変数 `x8_ble_caps_ime`）                 |
+| 6   | ポインティング button1（左クリック相当）          | 音声入力（dictation）                                     |
+| 7   | ポインティング button2（右クリック相当）          | Enter（`return_or_enter`）                             |
+| 8   | ポインティング button3（中クリック相当のことが多い）    | ⌘+左クリック（`button1` + `left_command`）                |
+| 9   | `application` キー                  | アプリケーションのウィンドウ（osascript: Control + ↓、key code 125） |
+| 10  | Consumer `ac_home`                | デスクトップ表示（osascript: F11 相当、key code 103）            |
+| 11  | Consumer `mute`                   | Mission Control（`mission_control`）                  |
+| 12  | Consumer `volume_decrement`（音量下げ） | F13                                                 |
+| 13  | Consumer `volume_increment`（音量上げ） | Shift + F13                                         |
+| 14  | 左 Command                         | F13                                                 |
+| 15  | 右 Command                         | F13                                                 |
 
 ### Space と Command（別ルール・全キーボード）
 
