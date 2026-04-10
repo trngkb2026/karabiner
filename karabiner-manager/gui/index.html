@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karabiner Manager</title>
+<style>
+:root {
+  --bg: #f5f6f8;
+  --card: #fff;
+  --border: #d8dee4;
+  --text: #1f2328;
+  --text2: #636c76;
+  --accent: #0969da;
+  --accent-bg: #ddf4ff;
+  --danger: #cf222e;
+  --danger-bg: #ffebe9;
+  --success: #1a7f37;
+  --success-bg: #dafbe1;
+  --radius: 8px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--text); }
+.app { display:grid; grid-template-columns:220px 1fr; grid-template-rows:52px 1fr; height:100vh; }
+
+/* Header */
+header { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; padding:0 20px;
+  background:var(--card); border-bottom:1px solid var(--border); }
+header h1 { font-size:16px; font-weight:600; }
+.header-right { display:flex; align-items:center; gap:12px; }
+#change-indicator { font-size:13px; color:var(--accent); display:none; }
+
+/* Sidebar */
+nav { background:var(--card); border-right:1px solid var(--border); overflow-y:auto; padding:8px 0; }
+.dev-item { padding:10px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;
+  border-left:3px solid transparent; font-size:14px; transition:all .15s; }
+.dev-item:hover { background:#f0f2f5; }
+.dev-item.active { background:var(--accent-bg); border-left-color:var(--accent); font-weight:600; }
+.dev-count { font-size:12px; color:var(--text2); background:var(--bg); padding:2px 8px; border-radius:10px; }
+
+/* Main */
+main { padding:20px 24px; overflow-y:auto; }
+.main-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.main-header h2 { font-size:18px; }
+
+/* Cards */
+.card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  margin-bottom:10px; transition:border-color .2s; }
+.card.changed { border-color:var(--accent); }
+.card.disabled-rule { opacity:.6; }
+
+/* Simple card */
+.card-simple { padding:12px 16px; }
+.card-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.arrow { color:var(--text2); font-size:18px; flex-shrink:0; }
+
+/* Badge */
+.badge { padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; flex-shrink:0; }
+.badge-simple { background:#e8f5e9; color:#2e7d32; }
+.badge-fn_key { background:#fff3e0; color:#e65100; }
+.badge-complex { background:var(--accent-bg); color:var(--accent); }
+.badge-off { background:var(--danger-bg); color:var(--danger); margin-left:8px; }
+
+/* Complex card */
+.card-complex .card-head { padding:12px 16px; cursor:pointer; display:flex; align-items:center; gap:10px; }
+.card-complex .card-head:hover { background:#fafbfc; }
+.expand-icon { font-size:10px; color:var(--text2); width:14px; text-align:center; flex-shrink:0; transition:transform .2s; }
+.expand-icon.open { transform:rotate(90deg); }
+.card-summary { font-size:14px; color:var(--text); flex-shrink:0; white-space:nowrap; font-weight:600; }
+.card-summary .sum-arrow { color:var(--text2); margin:0 6px; font-weight:400; }
+.card-summary .sum-mod { font-size:11px; color:var(--accent); font-weight:500; margin-left:2px; }
+.card-desc { font-size:12px; color:var(--text2); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis;
+  white-space:nowrap; text-align:right; }
+.card-body { padding:0 16px 16px; display:none; border-top:1px solid var(--border); }
+.card-body.open { display:block; padding-top:16px; }
+
+/* Fields */
+.field { margin-bottom:14px; }
+.field > label { display:block; font-size:12px; font-weight:600; color:var(--text2); margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px; }
+.field-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
+.field-row .btn-icon { visibility:hidden; }
+.field-row:hover .btn-icon { visibility:visible; }
+
+/* Selects */
+select.key-sel { padding:6px 10px; border:1px solid var(--border); border-radius:6px; font-size:13px;
+  min-width:160px; background:var(--card); }
+select.key-sel:focus { border-color:var(--accent); outline:none; box-shadow:0 0 0 2px var(--accent-bg); }
+select.mod-sel { padding:4px 8px; border:1px solid var(--border); border-radius:4px; font-size:12px; }
+
+/* Input */
+input.param-input { width:80px; padding:4px 8px; border:1px solid var(--border); border-radius:4px; font-size:13px; text-align:right; }
+input.desc-input { width:100%; padding:6px 10px; border:1px solid var(--border); border-radius:6px; font-size:13px; }
+
+/* Modifier chips */
+.mod-chips { display:flex; gap:4px; flex-wrap:wrap; }
+.mod-chip { padding:2px 8px; border-radius:4px; font-size:11px; cursor:pointer; border:1px solid var(--border);
+  background:var(--bg); user-select:none; transition:all .15s; }
+.mod-chip.active { background:var(--accent-bg); border-color:var(--accent); color:var(--accent); }
+.mod-chip:hover { border-color:var(--accent); }
+
+/* Buttons */
+.btn { padding:6px 14px; border:1px solid var(--border); border-radius:6px; font-size:13px;
+  cursor:pointer; background:var(--card); transition:all .15s; }
+.btn:hover { background:var(--bg); }
+.btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+.btn-primary:hover { background:#0550ae; }
+.btn-primary:disabled { opacity:.5; cursor:default; }
+.btn-danger { background:var(--danger); color:#fff; border-color:var(--danger); }
+.btn-danger:hover { background:#a40e26; }
+.btn-sm { padding:4px 10px; font-size:12px; }
+.btn-icon { background:none; border:none; cursor:pointer; color:var(--text2); font-size:16px; padding:2px 6px;
+  border-radius:4px; line-height:1; }
+.btn-icon:hover { background:var(--danger-bg); color:var(--danger); }
+.btn-outline { background:transparent; }
+
+/* Lazy checkbox */
+.lazy-label { font-size:12px; color:var(--text2); display:flex; align-items:center; gap:4px; }
+
+/* Toast */
+#toast { position:fixed; bottom:20px; right:20px; padding:10px 20px; border-radius:var(--radius);
+  background:var(--success); color:#fff; font-size:14px; display:none; z-index:100; box-shadow:0 4px 12px rgba(0,0,0,.15); }
+#toast.error { background:var(--danger); }
+
+/* Add dialog */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); display:flex; align-items:center;
+  justify-content:center; z-index:50; }
+.dialog { background:var(--card); border-radius:12px; padding:24px; width:480px; max-height:80vh; overflow-y:auto;
+  box-shadow:0 8px 30px rgba(0,0,0,.12); }
+.dialog h3 { margin-bottom:16px; }
+.dialog .field { margin-bottom:12px; }
+.dialog-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:20px; }
+
+/* Shell command display */
+.shell-cmd { padding:6px 10px; background:#f0f0f0; border:1px solid var(--border); border-radius:6px;
+  font-size:12px; color:var(--text2); display:inline-block; max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* Loading */
+#loading { text-align:center; padding:60px; color:var(--text2); }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Karabiner Manager</h1>
+    <div class="header-right">
+      <span id="change-indicator"></span>
+      <button id="save-btn" class="btn btn-primary" onclick="saveAll()" disabled>保存</button>
+      <button class="btn btn-sm" onclick="loadConfig()">更新</button>
+    </div>
+  </header>
+  <nav id="sidebar"></nav>
+  <main id="content"><div id="loading">読み込み中...</div></main>
+</div>
+
+<div id="add-overlay" class="overlay" style="display:none" onclick="if(event.target===this)closeAdd()">
+  <div class="dialog">
+    <h3>マッピング追加</h3>
+    <div class="field">
+      <label>種別</label>
+      <select id="add-type" class="key-sel" onchange="onAddTypeChange()">
+        <option value="simple">Simple Modification</option>
+        <option value="fn_key">Fn Function Key</option>
+        <option value="complex">Complex Modification</option>
+      </select>
+    </div>
+    <div id="add-desc-wrap" class="field" style="display:none">
+      <label>ルール説明</label>
+      <input id="add-desc" class="desc-input" placeholder="Rule description">
+    </div>
+    <div class="field">
+      <label>From</label>
+      <select id="add-from" class="key-sel"></select>
+    </div>
+    <div class="field">
+      <label>To</label>
+      <select id="add-to" class="key-sel"></select>
+    </div>
+    <div class="dialog-actions">
+      <button class="btn" onclick="closeAdd()">キャンセル</button>
+      <button class="btn btn-primary" onclick="submitAdd()">追加</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── Key code data ──────────────────────────────────────
+
+const KEY_GROUPS = [
+  ["基本", ["spacebar","return_or_enter","escape","delete_or_backspace","delete_forward","tab","caps_lock","insert","application"]],
+  ["修飾", ["left_shift","right_shift","left_command","right_command","left_option","right_option","left_control","right_control","fn"]],
+  ["F1-F12+", ["f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","f15","f16","f17","f18","f19","f20","print_screen"]],
+  ["矢印", ["up_arrow","down_arrow","left_arrow","right_arrow","page_up","page_down","home","end"]],
+  ["テンキー", ["keypad_0","keypad_1","keypad_2","keypad_3","keypad_4","keypad_5","keypad_6","keypad_7","keypad_8","keypad_9",
+    "keypad_plus","keypad_hyphen","keypad_asterisk","keypad_slash","keypad_period","keypad_equal_sign","keypad_num_lock","keypad_enter"]],
+  ["文字", "abcdefghijklmnopqrstuvwxyz".split("")],
+  ["数字", "0123456789".split("")],
+  ["記号", ["hyphen","equal_sign","open_bracket","close_bracket","backslash","non_us_backslash",
+    "semicolon","quote","grave_accent_and_tilde","comma","period","slash","international1","international_3"]],
+  ["日本語", ["japanese_eisuu","japanese_kana","japanese_pc_nfer","japanese_pc_xfer","japanese_pc_katakana"]],
+  ["メディア/システム", ["do_not_disturb","fastforward","play_or_pause","rewind","mission_control","launchpad",
+    "illumination_increment","illumination_decrement"]],
+];
+
+const CONSUMER_KEYS = ["dictation","play_or_pause","rewind","fast_forward","fastforward","mute",
+  "volume_increment","volume_decrement","display_brightness_increment","display_brightness_decrement",
+  "al_terminal_lock_or_screensaver","eject","menu","do_not_disturb","ac_home",
+  "scan_next_track","scan_previous_track"];
+
+const APPLE_KEYS = ["spotlight","dashboard","launchpad","mission_control","expose_desktop",
+  "illumination_increment","illumination_decrement"];
+
+const APPLE_TOP_CASE_KEYS = ["illumination_up","illumination_down","keyboard_fn"];
+
+const POINTING_BUTTONS = ["button1","button2","button3","button4","button5"];
+
+const ALL_MODS = ["shift","command","option","control","caps_lock","fn"];
+const MOD_LABELS = { shift:"Shift", command:"Cmd", option:"Opt", control:"Ctrl", caps_lock:"CapsLk", fn:"Fn" };
+
+// ── State ──────────────────────────────────────────────
+
+let groups = [];
+let activeGroupId = null;
+let expandedSet = new Set();
+let pendingChanges = new Map(); // path -> {field: value}
+
+// ── API ────────────────────────────────────────────────
+
+async function loadConfig() {
+  try {
+    const r = await fetch("/api/config");
+    const d = await r.json();
+    groups = d.groups;
+    pendingChanges.clear();
+    updateSaveBtn();
+    renderSidebar();
+    const hash = decodeURIComponent(location.hash.slice(1));
+    if (hash && groups.find(g => g.id === hash)) activeGroupId = hash;
+    else if (!activeGroupId && groups.length) activeGroupId = groups[0].id;
+    renderContent();
+  } catch(e) {
+    document.getElementById("content").innerHTML = `<div id="loading">読み込みエラー: ${e.message}</div>`;
+  }
+}
+
+async function saveAll() {
+  if (!pendingChanges.size) return;
+  const changes = [];
+  for (const [path, updates] of pendingChanges) {
+    changes.push({ path, updates });
+  }
+  try {
+    const r = await fetch("/api/save", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ changes }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      toast(`${d.n}件 保存しました`);
+      await loadConfig();
+    } else {
+      toast(d.msg || "保存エラー", true);
+    }
+  } catch(e) { toast(`エラー: ${e.message}`, true); }
+}
+
+async function deleteMapping(path) {
+  if (!confirm("このマッピングを削除しますか？")) return;
+  try {
+    const r = await fetch("/api/delete", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ path }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      toast("削除しました");
+      await loadConfig();
+    }
+  } catch(e) { toast(`エラー: ${e.message}`, true); }
+}
+
+async function submitAdd() {
+  const group = groups.find(g => g.id === activeGroupId);
+  if (!group) return;
+  const type = document.getElementById("add-type").value;
+  const fromVal = document.getElementById("add-from").value;
+  const toVal = document.getElementById("add-to").value;
+  const fromObj = parseKeyValue(fromVal);
+  const toObj = parseKeyValue(toVal);
+  const data = { from: fromObj, to: [toObj] };
+  if (type === "complex") {
+    data.rule_description = document.getElementById("add-desc").value || "Custom rule";
+  }
+  try {
+    const r = await fetch("/api/add", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ group_id: activeGroupId, type, data }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      toast("追加しました");
+      closeAdd();
+      await loadConfig();
+    } else {
+      toast(d.msg || "追加エラー", true);
+    }
+  } catch(e) { toast(`エラー: ${e.message}`, true); }
+}
+
+// ── Render ─────────────────────────────────────────────
+
+function renderSidebar() {
+  const el = document.getElementById("sidebar");
+  el.innerHTML = groups.map(g => `
+    <div class="dev-item ${g.id===activeGroupId?'active':''}" onclick="selectGroup('${esc(g.id)}')">
+      <span>${esc(g.name)}</span>
+      <span class="dev-count">${g.mappings.length}</span>
+    </div>
+  `).join("");
+}
+
+function selectGroup(id) {
+  activeGroupId = id;
+  history.replaceState(null, '', '#' + encodeURIComponent(id));
+  renderSidebar();
+  renderContent();
+}
+
+function renderContent() {
+  const g = groups.find(g => g.id === activeGroupId);
+  if (!g) return;
+  const el = document.getElementById("content");
+  const cards = g.mappings.map((m, i) => m.type === "complex" ? complexCard(m, i) : simpleCard(m, i)).join("");
+  el.innerHTML = `
+    <div class="main-header">
+      <h2>${esc(g.name)}</h2>
+      <button class="btn btn-outline btn-sm" onclick="openAdd()">+ 追加</button>
+    </div>
+    ${cards || '<p style="color:var(--text2);padding:20px">マッピングなし</p>'}
+  `;
+}
+
+function simpleCard(m, idx) {
+  const changed = pendingChanges.has(m.path) ? " changed" : "";
+  return `
+    <div class="card card-simple${changed}" data-path="${esc(m.path)}">
+      <div class="card-row">
+        <span class="badge badge-${m.type}">${m.type==="simple"?"Simple":"Fn"}</span>
+        ${keySelHtml(m.from, idx, "from")}
+        <span class="arrow">→</span>
+        ${keySelHtml(m.to[0]||{}, idx, "to.0")}
+        ${toModChips(m.to[0]||{}, idx, "to.0")}
+        <button class="btn-icon" onclick="deleteMapping('${esc(m.path)}')" title="削除">&times;</button>
+      </div>
+    </div>`;
+}
+
+function complexCard(m, idx) {
+  const desc = m.rule_description || m.description || "Complex rule";
+  const open = expandedSet.has(m.path);
+  const changed = pendingChanges.has(m.path) ? " changed" : "";
+  const disabledCls = m.enabled ? "" : " disabled-rule";
+
+  let body = "";
+  if (open) {
+    body = `<div class="card-body open">
+      <div class="field"><label>MANIPULATOR</label><input type="text" class="desc-input" value="${esc(m.rule_description || m.description || '')}" onchange="onDescChange(${idx},this.value)" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px"></div>
+      <div class="field">
+        <label>From</label>
+        <div class="field-row">
+          ${keySelHtml(m.from, idx, "from")}
+        </div>
+        ${fromModSection(m.from.modifiers, idx)}
+      </div>
+      <div class="field">
+        <label>To</label>
+        ${toArrayHtml(m.to, idx, "to")}
+      </div>
+      ${m.to_if_alone ? `<div class="field"><label>単押し (to_if_alone)</label>${toArrayHtml(m.to_if_alone, idx, "to_if_alone")}</div>` : ""}
+      ${m.to_if_held_down ? `<div class="field"><label>長押し (to_if_held_down)</label>${toArrayHtml(m.to_if_held_down, idx, "to_if_held_down")}</div>` : ""}
+      ${m.parameters ? `<div class="field"><label>パラメータ</label>${paramsHtml(m.parameters, idx)}</div>` : ""}
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="btn btn-danger btn-sm" onclick="deleteMapping('${esc(m.path)}')">削除</button>
+      </div>
+    </div>`;
+  }
+
+  return `
+    <div class="card card-complex${changed}${disabledCls}" data-path="${esc(m.path)}">
+      <div class="card-head" onclick="toggleCard('${esc(m.path)}')">
+        <span class="expand-icon ${open?'open':''}">&#9654;</span>
+        <span class="badge badge-complex">Complex</span>
+        <span class="card-summary">${summaryHtml(m)}</span>
+        ${!m.enabled ? '<span class="badge badge-off">無効</span>' : ''}
+        <span class="card-desc">${esc(desc)}</span>
+      </div>
+      ${body}
+    </div>`;
+}
+
+function summaryHtml(m) {
+  const modMap = {shift:"Shift",command:"Cmd",option:"Opt",control:"Ctrl",
+    left_command:"Cmd",left_option:"Opt",left_shift:"Shift",left_control:"Ctrl",
+    right_command:"Cmd",right_option:"Opt",right_shift:"Shift",right_control:"Ctrl"};
+  const fk = getKeyName(m.from);
+  const fmods = m.from.modifiers?.mandatory;
+  const fprefix = fmods?.length ? fmods.map(x => modMap[x]||x).join("+")+"+": "";
+  const tk = m.to.length ? getKeyName(m.to[0]) : "?";
+  const tmods = m.to.length && m.to[0].modifiers;
+  const tmod = tmods?.length ? `<span class="sum-mod">+${tmods.map(x => modMap[x]||x).join("+")}</span>` : "";
+  return `${esc(fprefix)}${esc(fk)}<span class="sum-arrow">→</span>${esc(tk)}${tmod}`;
+}
+
+// ── Key select HTML ────────────────────────────────────
+
+function keySelHtml(keyObj, idx, field) {
+  // shell_command: show text input instead of dropdown
+  if (keyObj && keyObj.shell_command) {
+    return `<code class="shell-cmd" title="${esc(keyObj.shell_command)}">$ ${esc(keyObj.shell_command.length > 40 ? keyObj.shell_command.substring(0,37)+'...' : keyObj.shell_command)}</code>`;
+  }
+  const val = keyObjToValue(keyObj);
+  const id = `ks_${idx}_${field.replace(/\./g,"_")}`;
+  return `<select class="key-sel" id="${id}" onchange="onKeySel(${idx},'${field}',this.value)">${keyOptions(val)}</select>`;
+}
+
+function keyOptions(selected) {
+  let html = "";
+  for (const [label, keys] of KEY_GROUPS) {
+    html += `<optgroup label="${label}">`;
+    for (const k of keys) {
+      const v = `key_code:${k}`;
+      html += `<option value="${v}" ${v===selected?"selected":""}>${k}</option>`;
+    }
+    html += "</optgroup>";
+  }
+  html += `<optgroup label="Consumer">`;
+  for (const k of CONSUMER_KEYS) {
+    const v = `consumer_key_code:${k}`;
+    html += `<option value="${v}" ${v===selected?"selected":""}>${k}</option>`;
+  }
+  html += "</optgroup>";
+  html += `<optgroup label="Apple">`;
+  for (const k of APPLE_KEYS) {
+    const v = `apple_vendor_keyboard_key_code:${k}`;
+    html += `<option value="${v}" ${v===selected?"selected":""}>${k}</option>`;
+  }
+  html += "</optgroup>";
+  html += `<optgroup label="Apple TopCase">`;
+  for (const k of APPLE_TOP_CASE_KEYS) {
+    const v = `apple_vendor_top_case_key_code:${k}`;
+    html += `<option value="${v}" ${v===selected?"selected":""}>${k}</option>`;
+  }
+  html += "</optgroup>";
+  html += `<optgroup label="Pointing">`;
+  for (const k of POINTING_BUTTONS) {
+    const v = `pointing_button:${k}`;
+    html += `<option value="${v}" ${v===selected?"selected":""}>${k}</option>`;
+  }
+  html += "</optgroup>";
+  return html;
+}
+
+function keyObjToValue(obj) {
+  if (!obj) return "key_code:spacebar";
+  if (obj.key_code) return `key_code:${obj.key_code}`;
+  if (obj.consumer_key_code) return `consumer_key_code:${obj.consumer_key_code}`;
+  if (obj.apple_vendor_keyboard_key_code) return `apple_vendor_keyboard_key_code:${obj.apple_vendor_keyboard_key_code}`;
+  if (obj.apple_vendor_top_case_key_code) return `apple_vendor_top_case_key_code:${obj.apple_vendor_top_case_key_code}`;
+  if (obj.pointing_button) return `pointing_button:${obj.pointing_button}`;
+  if (obj.shell_command) return `shell_command:${obj.shell_command}`;
+  return "key_code:spacebar";
+}
+
+function parseKeyValue(val) {
+  const i = val.indexOf(":");
+  const type = val.substring(0, i);
+  const code = val.substring(i + 1);
+  return { [type]: code };
+}
+
+function getKeyName(obj) {
+  if (!obj) return "?";
+  return obj.key_code || obj.consumer_key_code || obj.apple_vendor_keyboard_key_code || obj.apple_vendor_top_case_key_code || obj.pointing_button || (obj.shell_command ? "$ "+obj.shell_command.substring(0,20) : null) || "?";
+}
+
+// ── To array / modifiers ───────────────────────────────
+
+function toArrayHtml(arr, idx, field) {
+  if (!arr || !arr.length) return `<span style="color:var(--text2);font-size:13px">なし</span><div><button class="btn btn-outline btn-sm" onclick="addToItem(${idx},'${field}')">+ キー追加</button></div>`;
+  let html = arr.map((item, i) => {
+    const f = `${field}.${i}`;
+    return `<div class="field-row">
+      ${keySelHtml(item, idx, f)}
+      ${toModChips(item, idx, f)}
+      ${item.lazy ? '<span class="lazy-label"><input type="checkbox" checked onchange="onLazyChange('+idx+',\''+f+'\',this.checked)"> lazy</span>' : ""}
+      <button class="btn-icon" onclick="removeToItem(${idx},'${field}',${i})" title="削除">&times;</button>
+    </div>`;
+  }).join("");
+  html += `<div><button class="btn btn-outline btn-sm" onclick="addToItem(${idx},'${field}')">+ キー追加</button></div>`;
+  return html;
+}
+
+function toModChips(toItem, idx, field) {
+  const mods = toItem.modifiers || [];
+  return `<div class="mod-chips">${ALL_MODS.slice(0,4).map(m =>
+    `<span class="mod-chip ${mods.includes(m)?'active':''}" onclick="toggleToMod(${idx},'${field}','${m}')">${MOD_LABELS[m]||m}</span>`
+  ).join("")}</div>`;
+}
+
+function fromModSection(modifiers, idx) {
+  if (!modifiers) return "";
+  let html = "";
+  if (modifiers.mandatory && modifiers.mandatory.length) {
+    html += `<div style="margin-top:6px"><span style="font-size:11px;color:var(--text2)">必須:</span>
+      <div class="mod-chips" style="display:inline-flex;margin-left:4px">
+      ${ALL_MODS.map(m => `<span class="mod-chip ${modifiers.mandatory.includes(m)?'active':''}"
+        onclick="toggleFromMod(${idx},'mandatory','${m}')">${MOD_LABELS[m]||m}</span>`).join("")}
+      </div></div>`;
+  }
+  if (modifiers.optional && modifiers.optional.length) {
+    const hasAny = modifiers.optional.includes("any");
+    html += `<div style="margin-top:4px"><span style="font-size:11px;color:var(--text2)">任意:</span>
+      <span style="font-size:12px;color:var(--text2);margin-left:4px">${hasAny ? "any" : modifiers.optional.join(", ")}</span></div>`;
+  }
+  return html;
+}
+
+function paramsHtml(params, idx) {
+  return Object.entries(params).map(([k, v]) => {
+    const label = k.replace("basic.", "").replace(/_/g, " ");
+    return `<div class="field-row" style="margin-bottom:4px">
+      <span style="font-size:12px;color:var(--text2);min-width:200px">${label}</span>
+      <input class="param-input" type="number" value="${v}" onchange="onParamChange(${idx},'${k}',this.value)">
+      <span style="font-size:12px;color:var(--text2)">ms</span>
+    </div>`;
+  }).join("");
+}
+
+// ── Change handlers ────────────────────────────────────
+
+function getMapping(idx) {
+  const g = groups.find(g => g.id === activeGroupId);
+  return g ? g.mappings[idx] : null;
+}
+
+function markChange(idx, field, value) {
+  const m = getMapping(idx);
+  if (!m) return;
+  let updates = pendingChanges.get(m.path) || {};
+  updates[field] = value;
+  pendingChanges.set(m.path, updates);
+  updateSaveBtn();
+  // Visual feedback
+  const card = document.querySelector(`[data-path="${m.path}"]`);
+  if (card) card.classList.add("changed");
+}
+
+function onKeySel(idx, field, val) {
+  const m = getMapping(idx);
+  if (!m) return;
+  const keyObj = parseKeyValue(val);
+
+  if (field === "from") {
+    const newFrom = { ...keyObj };
+    if (m.from.modifiers) newFrom.modifiers = m.from.modifiers;
+    m.from = newFrom;
+    markChange(idx, "from", newFrom);
+  } else {
+    // field like "to.0" or "to_if_alone.1"
+    const parts = field.split(".");
+    const arrField = parts[0];
+    const arrIdx = parseInt(parts[1]);
+    const arr = m[arrField];
+    if (!arr || !arr[arrIdx]) return;
+    const existing = arr[arrIdx];
+    // Preserve modifiers, lazy
+    const newItem = { ...keyObj };
+    if (existing.modifiers) newItem.modifiers = existing.modifiers;
+    if (existing.lazy) newItem.lazy = existing.lazy;
+    arr[arrIdx] = newItem;
+    markChange(idx, arrField, arr);
+  }
+}
+
+function toggleToMod(idx, field, mod) {
+  const m = getMapping(idx);
+  if (!m) return;
+  const parts = field.split(".");
+  const arrField = parts[0];
+  const arrIdx = parseInt(parts[1]);
+  const arr = m[arrField];
+  if (!arr) return;
+
+  // For simple/fn_key: arrField is "to", arrIdx is 0
+  const item = arr[arrIdx];
+  if (!item) return;
+  let mods = item.modifiers || [];
+  if (mods.includes(mod)) {
+    mods = mods.filter(x => x !== mod);
+  } else {
+    mods.push(mod);
+  }
+  item.modifiers = mods.length ? mods : undefined;
+  if (!mods.length) delete item.modifiers;
+  markChange(idx, arrField, arr);
+  renderContent();
+}
+
+function toggleFromMod(idx, modType, mod) {
+  const m = getMapping(idx);
+  if (!m) return;
+  const mods = m.from.modifiers || {};
+  let arr = mods[modType] || [];
+  if (arr.includes(mod)) {
+    arr = arr.filter(x => x !== mod);
+  } else {
+    arr.push(mod);
+  }
+  mods[modType] = arr.length ? arr : undefined;
+  if (!arr.length) delete mods[modType];
+  m.from.modifiers = Object.keys(mods).length ? mods : undefined;
+  if (!Object.keys(mods).length) delete m.from.modifiers;
+  markChange(idx, "from", m.from);
+  renderContent();
+}
+
+function onLazyChange(idx, field, checked) {
+  const m = getMapping(idx);
+  if (!m) return;
+  const parts = field.split(".");
+  const arrField = parts[0];
+  const arrIdx = parseInt(parts[1]);
+  const item = m[arrField][arrIdx];
+  if (checked) item.lazy = true;
+  else delete item.lazy;
+  markChange(idx, arrField, m[arrField]);
+}
+
+function onParamChange(idx, paramKey, val) {
+  const m = getMapping(idx);
+  if (!m || !m.parameters) return;
+  m.parameters[paramKey] = parseInt(val) || 0;
+  markChange(idx, "parameters", m.parameters);
+}
+
+function addToItem(idx, field) {
+  const m = getMapping(idx);
+  if (!m) return;
+  if (!m[field]) m[field] = [];
+  m[field].push({ key_code: "spacebar" });
+  markChange(idx, field, m[field]);
+  renderContent();
+}
+
+function removeToItem(idx, field, arrIdx) {
+  const m = getMapping(idx);
+  if (!m || !m[field]) return;
+  m[field].splice(arrIdx, 1);
+  markChange(idx, field, m[field]);
+  renderContent();
+}
+
+function onDescChange(idx, val) {
+  const m = getMapping(idx);
+  if (!m) return;
+  m.rule_description = val;
+  // Save to rule level path (remove .manipulators.N suffix)
+  const rulePath = m.path.replace(/\.manipulators\.\d+$/, "");
+  let updates = pendingChanges.get(rulePath) || {};
+  updates.description = val;
+  pendingChanges.set(rulePath, updates);
+  updateSaveBtn();
+  const card = document.querySelector(`[data-path="${m.path}"]`);
+  if (card) card.classList.add("changed");
+}
+
+// ── UI actions ─────────────────────────────────────────
+
+function toggleCard(path) {
+  if (expandedSet.has(path)) expandedSet.delete(path);
+  else expandedSet.add(path);
+  renderContent();
+}
+
+function updateSaveBtn() {
+  const btn = document.getElementById("save-btn");
+  const ind = document.getElementById("change-indicator");
+  const n = pendingChanges.size;
+  btn.disabled = n === 0;
+  if (n > 0) {
+    ind.textContent = `${n}件の変更`;
+    ind.style.display = "inline";
+  } else {
+    ind.style.display = "none";
+  }
+}
+
+function openAdd() {
+  document.getElementById("add-overlay").style.display = "flex";
+  const fromSel = document.getElementById("add-from");
+  const toSel = document.getElementById("add-to");
+  fromSel.innerHTML = keyOptions("key_code:spacebar");
+  toSel.innerHTML = keyOptions("key_code:spacebar");
+  onAddTypeChange();
+}
+
+function closeAdd() {
+  document.getElementById("add-overlay").style.display = "none";
+}
+
+function onAddTypeChange() {
+  const t = document.getElementById("add-type").value;
+  document.getElementById("add-desc-wrap").style.display = t === "complex" ? "block" : "none";
+}
+
+function toast(msg, isError) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = isError ? "error" : "";
+  el.style.display = "block";
+  setTimeout(() => el.style.display = "none", 2500);
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+// ── Init ───────────────────────────────────────────────
+loadConfig();
+</script>
+</body>
+</html>
