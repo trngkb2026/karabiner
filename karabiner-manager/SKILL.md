@@ -1,65 +1,94 @@
 ---
 name: karabiner-manager
 description: |
-  Karabiner-Elementsの設定管理スキル。複数デバイス（Ewin Tenkey, 8BitDo Zero 2, K02 BLE等）のキーマッピングを一括管理。
+  Karabiner-Elementsの設定管理スキル。複数デバイス（Magic Keyboard、X8 BLE / K02 / Ewin テンキー、Logitech USB Receiver、8BitDo Zero 2 / Micro(36897)、Keychron Link-KM・B3 Pro 等）のキーマッピングを一括管理。
   マッピング変更、設定確認、バックアップ/復元に対応。
-  使用場面：「Karabiner」「キーマッピング」「テンキー」「8BitDo」「K02」「キー設定」「マッピング変更」などのリクエスト時。
+  使用場面：「Karabiner」「キーマッピング」「テンキー」「8BitDo」「8BitDo Micro」「K02」「Ewin」「X8」「ミニキーボード」「Magic Keyboard」「Keychron」「Link-KM」「B3 Pro」「Logitech」「キー設定」「マッピング変更」「ゲームパッド」「コントローラー設定」などのリクエスト時。
 ---
 
 # Karabiner-Elements 設定管理
 
-macOSのKarabiner-Elements設定を管理する。
+macOS の Karabiner-Elements 設定を管理する。デバイス ID は EventViewer で確認し、次表はリポジトリの `karabiner.json` に合わせたもの（ルールの `description` を正とする）。
 
 ## 設定ファイル
 
 `~/.config/karabiner/karabiner.json`
 
-## 管理対象デバイス
+## 管理対象デバイス（complex_modifications / devices）
 
-| デバイス名 | vendor_id | product_id | ルール名 |
-|------------|-----------|------------|----------|
-| Ewin Wireless Tenkey Pad | 1452 | 599 | Ewin Wireless Tenkey Pad - カスタム設定 |
-| 8BitDo Zero 2 | 11720 | 36888 | 8BitDo Zero 2 - 全ボタン設定 |
-| K02 BLE Keyboard | 1452 | 599 | K02 BLE Keyboard - 各種設定 |
+| デバイス（ルール名・役割） | vendor_id | product_id | 備考 |
+|---------------------------|-----------|------------|------|
+| Magic Keyboard - カスタム設定 | 76 | 671 | Apple Bluetooth キーボード |
+| X8 BLE Keyboard - カスタム設定 | 1452 | 599 | Ewin X8 / K02 など **同一 VID/PID** の BLE（キーボード＋トラックパッドとして認識される構成あり） |
+| Block do_not_disturb …（Logitech USB Receiver） | 1133 | 50503 | レシーバー経由のキーボード／ポインティング |
+| 8BitDo Zero 2 - 全ボタン設定 | 11720 | 36888 | 複合ルール。**現状ルールに `enabled: false`**（有効化まで未適用） |
+| Keychron Link-KM - カスタム設定 | 13364 | （複合ルールは `device_if`・PID なし） | メインキーボードは **Bluetooth 前提**。USB/ドングル用 PID 専用行は削除済み（`references/DEVICES.md`） |
+| 8BitDo Micro 等（36897） | 11720 | 36897 | Zero 2 とは別 PID。`devices` の simple_modifications。一部グローバルルールの `device_unless` 除外対象 |
+| Keychron（devices の simple_modifications） | 13364 | （`is_keyboard` のみ・PID なし） | `grave_accent_and_tilde` → 音量 など |
+| TENBT03 等テンキー（devices の simple_modifications） | 9427 | 12427 | 上記と別デバイス。**Keychron 複合ルールの対象外** |
+
+## デバイス横断・その他のルール
+
+`complex_modifications` にはデバイス専用以外に、例えば次がある（内容は `karabiner.json` を確認）：
+
+- Space の単発／長押し（Magic Keyboard 以外での挙動など）
+- ⌃Space による IME トグル（内部変数）
+- X8 BLE: Fn＋トラックパッド移動 → スクロール
+- ⌘W → スペース
 
 ## ワークフロー
 
+### 0. デバイス選択（最初に必ず実行）
+
+スキル起動時、ユーザーの指示からデバイスが特定できない場合は、以下の選択肢を提示して対象デバイスを確認する:
+
+1. **Magic Keyboard** (76:671)
+2. **X8 BLE / K02** (1452:599)
+3. **Keychron Link-KM** (13364)
+4. **8BitDo Zero 2** (11720:36888)
+5. **8BitDo Micro** (11720:36897)
+6. **TENBT03 テンキー** (9427:12427)
+7. **グローバル（デバイス横断）**
+
+ユーザーが「Keychron」「テンキー」等のキーワードで指定済みの場合はスキップ。
+
 ### 1. 設定確認
 
-1. karabiner.jsonを読み込む
-2. `profiles[].complex_modifications.rules[]`からルールを抽出
-3. デバイスごとにマッピングをテーブル表示
+1. `karabiner.json` を読み込む
+2. `profiles[].complex_modifications.rules[]` からルールを抽出
+3. `conditions` の `device_if` / `device_unless` と `identifiers` をデバイス名と突き合わせる
+4. デバイスごとにマッピングをテーブル表示
 
 ### 2. マッピング変更
 
 1. 変更内容をヒアリング
-2. 変更前後のdiffを提示
+2. 変更前後の diff を提示
 
 ```diff
 - "to": [{ "key_code": "old_key" }]
 + "to": [{ "key_code": "new_key", "modifiers": ["modifier"] }]
 ```
 
-3. 承認後、karabiner.jsonを編集（Karabinerは自動検出）
+3. 承認後、`karabiner.json` を編集（Karabiner は自動検出）
 
 ### 3. バックアップ/復元
 
-- **バックアップ**: `scripts/backup.py`を実行
-- **復元**: `scripts/restore.py`を実行
+- **バックアップ**: `karabiner-manager/scripts/backup.py` を実行
+- **復元**: `karabiner-manager/scripts/restore.py` を実行
 
-## from句の書き方
+## from 句の書き方
 
 ```json
 // 単体キー
 "from": { "key_code": "keypad_plus" }
 
-// 修飾キー必須（特定のShift）
+// 修飾キー必須（特定の Shift）
 "from": {
     "key_code": "8",
     "modifiers": { "mandatory": ["right_shift"] }
 }
 
-// 修飾キー必須（どちらのShiftでもOK）
+// 修飾キー必須（どちらの Shift でも可）
 "from": {
     "key_code": "9",
     "modifiers": { "mandatory": ["shift"], "optional": ["caps_lock"] }
@@ -72,7 +101,7 @@ macOSのKarabiner-Elements設定を管理する。
 }
 ```
 
-## to句の書き方
+## to 句の書き方
 
 ```json
 // 単一キー
@@ -81,9 +110,9 @@ macOSのKarabiner-Elements設定を管理する。
 { "key_code": "print_screen" }
 
 // 修飾キー付き
-{ "key_code": "a", "modifiers": ["command"] }           // ⌘+A
-{ "key_code": "v", "modifiers": ["command", "control"] } // ⌘+^+V
-{ "key_code": "x", "modifiers": ["command", "shift"] }   // ⌘+Shift+X
+{ "key_code": "a", "modifiers": ["command"] }
+{ "key_code": "v", "modifiers": ["command", "control"] }
+{ "key_code": "x", "modifiers": ["command", "shift"] }
 
 // 連続入力
 [
@@ -98,11 +127,11 @@ macOSのKarabiner-Elements設定を管理する。
 { "shell_command": "pmset sleepnow" }
 ```
 
-## 利用可能なkey_code
+## 利用可能な key_code（よく使うもの）
 
-**基本キー**: spacebar, return_or_enter, escape, delete_or_backspace, delete_forward, tab
+**基本**: spacebar, return_or_enter, escape, delete_or_backspace, delete_forward, tab
 
-**修飾キー**: left_shift, right_shift, left_command, right_command, left_option, right_option, left_control, right_control
+**修飾**: left_shift, right_shift, left_command, right_command, left_option, right_option, left_control, right_control
 
 **テンキー**: keypad_0〜keypad_9, keypad_plus, keypad_hyphen, keypad_slash, keypad_period, keypad_asterisk, keypad_num_lock, keypad_enter
 
@@ -114,11 +143,14 @@ macOSのKarabiner-Elements設定を管理する。
 
 ## キーコード確認方法
 
-不明なキーはKarabiner-EventViewerで確認：
-1. Karabiner-EventViewerを起動
-2. 対象のキーを押す
-3. `key_code`と`modifiers`を記録
+不明なキーは Karabiner-EventViewer で確認する。
+
+1. Karabiner-EventViewer を起動
+2. 対象キーを押す
+3. `key_code` と `modifiers` を記録
 
 ## 詳細リファレンス
 
-- デバイス別マッピング一覧: `references/device_mappings.md`
+- VID/PID・接続例・Keychron の適用範囲: `karabiner-manager/references/DEVICES.md`
+- 名前付き変数（IME トグル等）: `karabiner-manager/references/Variables.md`
+- 物理キーとマッピングの対応: `karabiner-manager/references/device_mappings.md`（`karabiner.json` と矛盾する場合は JSON を正とする）
