@@ -2,7 +2,7 @@
 """
 karabiner.json のマッピング一覧をデバイス別 Markdown に書き出す。
 
-既定出力: ~/.config/karabiner/mappings_by_device/
+既定出力: ~/.config/karabiner/karabiner-manager/mappings_by_device/
   - global.md … デバイス非依存の複合ルール + プロファイル fn キー
   - v{vendor}_p{product}.md … 各デバイス
   - _index.md … 目次
@@ -338,7 +338,7 @@ def main() -> int:
         print(f"エラー: 設定が見つかりません: {config}", file=sys.stderr)
         return 1
 
-    out_dir = dir_override or (Path.home() / ".config" / "karabiner" / "mappings_by_device")
+    out_dir = dir_override or (Path.home() / ".config" / "karabiner" / "karabiner-manager" / "mappings_by_device")
     total, files = export_markdown(config, out_dir)
     n_dev = len(files) - 3
     print(f"✅ Markdown: global.md + {n_dev} デバイス + _index.md + all.md（データ {total} 件）")
