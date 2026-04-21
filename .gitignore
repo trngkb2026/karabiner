@@ -1,4 +1,6 @@
 .DS_Store
 automatic_backups/
 karabiner.json.bak
+karabiner.json.bak.*
 *.skill
+karabiner-manager/references/docs/
