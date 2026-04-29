@@ -458,7 +458,7 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "ボタン2（ポインティング）→ Enter",
+                                "description": "ボタン2（ポインティング）→ Space×4+Enter",
                                 "from": {
                                     "modifiers": { "optional": ["any"] },
                                     "pointing_button": "button2"
@@ -484,7 +484,7 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "ボタン3（ポインティング）→ ⌘+左クリック",
+                                "description": "ボタン3（ポインティング）→ left_command",
                                 "from": {
                                     "modifiers": { "optional": ["any"] },
                                     "pointing_button": "button3"
@@ -574,7 +574,7 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "音量下げ（Consumer）→ eisuu→o→k→return（順に1回ずつ）",
+                                "description": "音量下げ（Consumer）→ ⌘C",
                                 "from": {
                                     "consumer_key_code": "volume_decrement",
                                     "modifiers": { "optional": ["any"] }
@@ -599,7 +599,7 @@
                                         "type": "device_if"
                                     }
                                 ],
-                                "description": "音量上げ（Consumer）→ eisuu→D→o→n→e→return（順に1回ずつ）",
+                                "description": "音量上げ（Consumer）→ ⌘V",
                                 "from": {
                                     "consumer_key_code": "volume_increment",
                                     "modifiers": { "optional": ["any"] }

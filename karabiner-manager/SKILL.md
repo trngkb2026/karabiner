@@ -31,10 +31,8 @@ macOS の Karabiner-Elements 設定を管理する。デバイス ID は EventVi
 
 `complex_modifications` にはデバイス専用以外に、例えば次がある（内容は `karabiner.json` を確認）：
 
-- Space の単発／長押し（Magic Keyboard 以外での挙動など）
-- ⌃Space による IME トグル（内部変数）
+- 左⌘ / 右⌘ 単独短押しによる IME 切替
 - X8 BLE: Fn＋トラックパッド移動 → スクロール
-- ⌘W → スペース
 
 ## ワークフロー
 

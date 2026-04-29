@@ -53,7 +53,5 @@
 
 | ルール | メモ |
 |--------|------|
-| Space: 単発でスペース / 長押し・併用で Command（Magic Keyboard 以外） | `to_if_alone_timeout_milliseconds` 400 |
-| ⌘ 短押しで IME（左→英数 / 右→かな）（X8 BLE 以外） | `to_if_alone_timeout_milliseconds` 300 |
-| ⌃Space: 英数⇔かなトグル | 内部変数 `ctrl_space_ime_toggle` |
-| ⌘W → スペース | |
+| ⌘ 短押しで IME（左→英数 / 右→かな）（X8 BLE / TENBT03 以外） | `to_if_alone_timeout_milliseconds` 300 |
+| プロファイル直下の Fn キー | F1-F12 を F キーとして扱う |

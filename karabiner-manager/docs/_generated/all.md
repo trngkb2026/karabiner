@@ -1275,12 +1275,12 @@ null
 ```
 
 
-### 5. ボタン2（ポインティング）→ Enter
+### 5. ボタン2（ポインティング）→ Space×4+Enter
 
 - **種別:** `complex_modification`
 - **プロファイル:** `240106`
 - **ルールグループ:** X8 BLE Keyboard - カスタム設定
-- **マニピュレータ:** ボタン2（ポインティング）→ Enter
+- **マニピュレータ:** ボタン2（ポインティング）→ Space×4+Enter
 - **デバイス条件:** vendor=1452 product=599
 
 **from:**
@@ -1319,12 +1319,12 @@ null
 ```
 
 
-### 6. ボタン3（ポインティング）→ ⌘+左クリック
+### 6. ボタン3（ポインティング）→ left_command
 
 - **種別:** `complex_modification`
 - **プロファイル:** `240106`
 - **ルールグループ:** X8 BLE Keyboard - カスタム設定
-- **マニピュレータ:** ボタン3（ポインティング）→ ⌘+左クリック
+- **マニピュレータ:** ボタン3（ポインティング）→ left_command
 - **デバイス条件:** vendor=1452 product=599
 
 **from:**
@@ -1453,12 +1453,12 @@ null
 ```
 
 
-### 10. 音量下げ（Consumer）→ eisuu→o→k→return（順に1回ずつ）
+### 10. 音量下げ（Consumer）→ ⌘C
 
 - **種別:** `complex_modification`
 - **プロファイル:** `240106`
 - **ルールグループ:** X8 BLE Keyboard - カスタム設定
-- **マニピュレータ:** 音量下げ（Consumer）→ eisuu→o→k→return（順に1回ずつ）
+- **マニピュレータ:** 音量下げ（Consumer）→ ⌘C
 - **デバイス条件:** vendor=1452 product=599
 
 **from:**
@@ -1488,12 +1488,12 @@ null
 ```
 
 
-### 11. 音量上げ（Consumer）→ eisuu→D→o→n→e→return（順に1回ずつ）
+### 11. 音量上げ（Consumer）→ ⌘V
 
 - **種別:** `complex_modification`
 - **プロファイル:** `240106`
 - **ルールグループ:** X8 BLE Keyboard - カスタム設定
-- **マニピュレータ:** 音量上げ（Consumer）→ eisuu→D→o→n→e→return（順に1回ずつ）
+- **マニピュレータ:** 音量上げ（Consumer）→ ⌘V
 - **デバイス条件:** vendor=1452 product=599
 
 **from:**
