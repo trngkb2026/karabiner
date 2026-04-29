@@ -459,10 +459,10 @@ async function loadConfig() {
     groups = d.groups;
     pendingChanges.clear();
     updateSaveBtn();
-    renderSidebar();
     const hash = decodeURIComponent(location.hash.slice(1));
     if (hash && groups.find(g => g.id === hash)) activeGroupId = hash;
     else if (!activeGroupId && groups.length) activeGroupId = groups[0].id;
+    renderSidebar();
     renderContent();
   } catch(e) {
     document.getElementById("content").innerHTML = `<div id="loading">読み込みエラー: ${e.message}</div>`;
@@ -598,6 +598,14 @@ function renderSidebar() {
 function selectGroup(id) {
   activeGroupId = id;
   history.replaceState(null, '', '#' + encodeURIComponent(id));
+  renderSidebar();
+  renderContent();
+}
+
+function syncGroupFromHash() {
+  const hash = decodeURIComponent(location.hash.slice(1));
+  if (!hash || !groups.find(g => g.id === hash) || activeGroupId === hash) return;
+  activeGroupId = hash;
   renderSidebar();
   renderContent();
 }
@@ -1443,6 +1451,7 @@ async function saveRelacon() {
 }
 
 // ── Init ───────────────────────────────────────────────
+window.addEventListener("hashchange", syncGroupFromHash);
 loadConfig();
 </script>
 </body>

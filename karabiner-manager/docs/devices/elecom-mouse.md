@@ -25,24 +25,24 @@
 
 | From | To | 用途の推測 |
 |------|------|---------|
-| `pointing_button: button1` | `pointing_button: button1` | 左クリック（恒等マッピング・意図不明、動作確認推奨） |
-| `pointing_button: button2` | `pointing_button: button2` | 右クリック（恒等マッピング） |
-| `pointing_button: button3` | `c` + `command`（⌘C） | コピー |
-| `pointing_button: button4` | `s` + `control`（⌃S） | 進む・戻る系を別機能に置換 |
-| `pointing_button: button5` | `v` + `control`（⌃V） | 同上 |
+| `pointing_button: button1` | `1` + `option`（⌥1） | 用途未確定 |
+| `pointing_button: button2` | `v` + `shift` + `option`（⇧⌥V） | 用途未確定 |
+| `pointing_button: button3` | `return_or_enter` | Enter |
+| `pointing_button: button4` | `c` + `command`（⌘C） | コピー |
+| `pointing_button: button5` | `v` + `command`（⌘V） | ペースト |
 
 ### Consumer キー（メディアキー）
 
 | From | To |
 |------|------|
 | `consumer_key_code: play_or_pause` | `key_code: fn` |
-| `consumer_key_code: scan_previous_track` | `delete_or_backspace` + `command`（⌘Del） |
-| `consumer_key_code: scan_next_track` | `return_or_enter` + `command`（⌘Enter） |
-| `consumer_key_code: volume_increment` | `up_arrow` |
-| `consumer_key_code: volume_decrement` | `down_arrow` |
+| `consumer_key_code: scan_previous_track` | `tab` + `shift` + `control`（⇧⌃Tab） |
+| `consumer_key_code: scan_next_track` | `tab` + `control`（⌃Tab） |
+| `consumer_key_code: volume_increment` | `return_or_enter` |
+| `consumer_key_code: volume_decrement` | `delete_or_backspace` + `command`（⌘Backspace） |
 
 ## 備考
 
 - ELECOM の Bluetooth マウスは**ファーム更新や接続モードで VID/PID が変わることがある**。EventViewer で要確認。
-- `button1` / `button2` の恒等マッピング（入力＝出力）は、Karabiner で「そのボタンは他ルールの影響を受けない」ことを明示する目的か、あるいは意図せず残った設定と思われる。消すかどうかは要判断。
+- GUIでは `リラコン` として表示しているが、実機型番は未確定。物理ボタンと `button1`〜`button5` の対応は EventViewer で再確認する。
 - `play_or_pause` → `fn` は、`fn` 単独送出が他アプリで何かのトリガーになっている可能性あり（未検証）。
