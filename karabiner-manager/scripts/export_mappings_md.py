@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 """
-karabiner.json のマッピング一覧をデバイス別 Markdown に書き出す。
+karabiner.json のマッピング一覧をデバイス別 Markdown に書き出す（機械生成）。
 
-既定出力: ~/.config/karabiner/karabiner-manager/mappings_by_device/
+既定出力: ~/.config/karabiner/karabiner-manager/docs/_generated/
   - global.md … デバイス非依存の複合ルール + プロファイル fn キー
   - v{vendor}_p{product}.md … 各デバイス
   - _index.md … 目次
   - all.md … 上記を1ファイルに連結
 
 第1引数で出力ディレクトリを上書き可。
+
+注意: 手書きドキュメント（`docs/devices/*.md` 等）とは別系統。
+このスクリプトの出力はデバッグ・棚卸し用途で、正規ドキュメントは
+`docs/README.md` 配下（手書き）を参照すること。
 """
 
 import json
@@ -18,23 +22,43 @@ from pathlib import Path
 from typing import Any, DefaultDict, Dict, List, Optional, Set, Tuple
 
 
+DeviceKey = Tuple[str, str]
+
+
+def id_part(value: Any) -> str:
+    return "" if value is None else str(value)
+
+
+def sort_key(key: DeviceKey) -> Tuple[int, int]:
+    vid, pid = key
+    return (int(vid), int(pid) if pid else -1)
+
+
+def device_filename(vs: str, ps: str) -> str:
+    return f"v{vs}_p{ps}.md" if ps else f"v{vs}.md"
+
+
+def display_id(value: str) -> str:
+    return value if value else "—"
+
+
 def get_karabiner_config_path() -> Path:
     return Path.home() / ".config" / "karabiner" / "karabiner.json"
 
 
-def pairs_from_conditions(conditions: Optional[List[Any]]) -> List[Tuple[str, str]]:
+def pairs_from_conditions(conditions: Optional[List[Any]]) -> List[DeviceKey]:
     if not conditions:
         return []
-    out: List[Tuple[str, str]] = []
-    seen: Set[Tuple[str, str]] = set()
+    out: List[DeviceKey] = []
+    seen: Set[DeviceKey] = set()
     for c in conditions:
         if c.get("type") != "device_if":
             continue
         for ident in c.get("identifiers") or []:
-            v, p = ident.get("vendor_id"), ident.get("product_id")
-            if v is None and p is None:
+            v = ident.get("vendor_id")
+            if v is None:
                 continue
-            key = (str(v), str(p))
+            key = (id_part(v), id_part(ident.get("product_id")))
             if key not in seen:
                 seen.add(key)
                 out.append(key)
@@ -51,10 +75,10 @@ def device_note_from_ident(ident: Dict[str, Any]) -> str:
 
 def collect_rows(
     profile: Dict[str, Any],
-) -> Tuple[List[Dict[str, str]], DefaultDict[Tuple[str, str], List[Dict[str, str]]]]:
+) -> Tuple[List[Dict[str, str]], DefaultDict[DeviceKey, List[Dict[str, str]]]]:
     pname = profile.get("name", "")
     global_rows: List[Dict[str, str]] = []
-    per_device: DefaultDict[Tuple[str, str], List[Dict[str, str]]] = defaultdict(list)
+    per_device: DefaultDict[DeviceKey, List[Dict[str, str]]] = defaultdict(list)
 
     for rule in profile.get("complex_modifications", {}).get("rules", []):
         group = rule.get("description", "")
@@ -94,9 +118,9 @@ def collect_rows(
     for dev in profile.get("devices", []):
         ident = dev.get("identifiers") or {}
         vid, pid = ident.get("vendor_id"), ident.get("product_id")
-        if vid is None or pid is None:
+        if vid is None:
             continue
-        vs, ps = str(vid), str(pid)
+        vs, ps = id_part(vid), id_part(pid)
         key = (vs, ps)
         dev_note = device_note_from_ident(ident)
 
@@ -195,8 +219,8 @@ def device_intro_lines(vs: str, ps: str, rows: List[Dict[str, str]]) -> List[str
             json_ident = df
             break
     lines = [
-        f"- **vendor_id:** `{vs}`",
-        f"- **product_id:** `{ps}`",
+        f"- **vendor_id:** `{display_id(vs)}`",
+        f"- **product_id:** `{display_id(ps)}`",
         "",
     ]
     if json_ident:
@@ -262,14 +286,14 @@ def export_markdown(config_path: Path, out_dir: Path) -> Tuple[int, List[Path]]:
     written.append(gpath)
 
     total = len(global_rows)
-    sorted_keys = sorted(per_device.keys(), key=lambda x: (int(x[0]), int(x[1])))
+    sorted_keys = sorted(per_device.keys(), key=sort_key)
 
     for vs, ps in sorted_keys:
         rows = per_device[(vs, ps)]
-        fname = f"v{vs}_p{ps}.md"
+        fname = device_filename(vs, ps)
         p = out_dir / fname
         body = build_document(
-            f"Karabiner マッピング（vendor {vs} / product {ps}）",
+            f"Karabiner マッピング（vendor {display_id(vs)} / product {display_id(ps)}）",
             device_intro_lines(vs, ps, rows),
             rows,
         )
@@ -285,9 +309,9 @@ def export_markdown(config_path: Path, out_dir: Path) -> Tuple[int, List[Path]]:
         f"| [global.md](global.md) | — | — | {len(global_rows)} | デバイス非依存 + プロファイル fn キー |",
     ]
     for vs, ps in sorted_keys:
-        fname = f"v{vs}_p{ps}.md"
+        fname = device_filename(vs, ps)
         idx_lines.append(
-            f"| [{fname}]({fname}) | {vs} | {ps} | {len(per_device[(vs, ps)])} | |"
+            f"| [{fname}]({fname}) | {display_id(vs)} | {display_id(ps)} | {len(per_device[(vs, ps)])} | |"
         )
     idx_lines.extend(
         [
@@ -317,7 +341,7 @@ def export_markdown(config_path: Path, out_dir: Path) -> Tuple[int, List[Path]]:
         "",
     ]
     for vs, ps in sorted_keys:
-        fname = f"v{vs}_p{ps}.md"
+        fname = device_filename(vs, ps)
         all_parts.append(f"## {fname}\n\n")
         all_parts.append((out_dir / fname).read_text(encoding="utf-8"))
         all_parts.append("\n---\n\n")
@@ -338,7 +362,7 @@ def main() -> int:
         print(f"エラー: 設定が見つかりません: {config}", file=sys.stderr)
         return 1
 
-    out_dir = dir_override or (Path.home() / ".config" / "karabiner" / "karabiner-manager" / "mappings_by_device")
+    out_dir = dir_override or (Path.home() / ".config" / "karabiner" / "karabiner-manager" / "docs" / "_generated")
     total, files = export_markdown(config, out_dir)
     n_dev = len(files) - 3
     print(f"✅ Markdown: global.md + {n_dev} デバイス + _index.md + all.md（データ {total} 件）")

@@ -1,6 +1,6 @@
 # Keychron Link-KM キーマップ一覧
 
-> **反映元:** リポジトリ直下の [`karabiner.json`](../../karabiner.json)。**更新: 2026-04-04**（内容は JSON が正本）。
+> **反映元:** `~/.config/karabiner/karabiner.json`（`karabiner-manager/` の 1 階層上にあるファイル）。**更新: 2026-04-04**（内容は JSON が正本）。
 
 ## デバイス情報
 

@@ -22,7 +22,7 @@ macOS の Karabiner-Elements 設定を管理する。デバイス ID は EventVi
 | X8 BLE Keyboard - カスタム設定 | 1452 | 599 | Ewin X8 / K02 など **同一 VID/PID** の BLE（キーボード＋トラックパッドとして認識される構成あり） |
 | Block do_not_disturb …（Logitech USB Receiver） | 1133 | 50503 | レシーバー経由のキーボード／ポインティング |
 | 8BitDo Zero 2 - 全ボタン設定 | 11720 | 36888 | 複合ルール。**現状ルールに `enabled: false`**（有効化まで未適用） |
-| Keychron Link-KM - カスタム設定 | 13364 | （複合ルールは `device_if`・PID なし） | メインキーボードは **Bluetooth 前提**。USB/ドングル用 PID 専用行は削除済み（`references/DEVICES.md`） |
+| Keychron Link-KM - カスタム設定 | 13364 | （複合ルールは `device_if`・PID なし） | メインキーボードは **Bluetooth 前提**。USB/ドングル用 PID 専用行は削除済み（`docs/README.md`） |
 | 8BitDo Micro 等（36897） | 11720 | 36897 | Zero 2 とは別 PID。`devices` の simple_modifications。一部グローバルルールの `device_unless` 除外対象 |
 | Keychron（devices の simple_modifications） | 13364 | （`is_keyboard` のみ・PID なし） | `grave_accent_and_tilde` → 音量 など |
 | TENBT03 等テンキー（devices の simple_modifications） | 9427 | 12427 | 上記と別デバイス。**Keychron 複合ルールの対象外** |
@@ -151,6 +151,12 @@ macOS の Karabiner-Elements 設定を管理する。デバイス ID は EventVi
 
 ## 詳細リファレンス
 
-- VID/PID・接続例・Keychron の適用範囲: `karabiner-manager/references/DEVICES.md`
-- 名前付き変数（IME トグル等）: `karabiner-manager/references/Variables.md`
-- 物理キーとマッピングの対応: `karabiner-manager/references/device_mappings.md`（`karabiner.json` と矛盾する場合は JSON を正とする）
+- デバイス一覧・接続例・グローバルルール: `karabiner-manager/docs/README.md`
+- 名前付き変数（IME トグル等）: `karabiner-manager/docs/variables.md`
+- グローバル複合ルール（デバイス非依存）: `karabiner-manager/docs/global-rules.md`
+- デバイス別マッピング: `karabiner-manager/docs/devices/*.md`（`karabiner.json` と矛盾する場合は JSON を正とする）
+  - TENBT03: `docs/devices/tenbt03.md` / X8 BLE: `docs/devices/x8-ble-keyboard.md` / Magic Keyboard: `docs/devices/magic-keyboard.md`
+  - Keychron Link-KM: `docs/devices/keychron-link-km.md` / Logitech Receiver: `docs/devices/logitech-receiver.md`
+  - 8BitDo Zero 2: `docs/devices/8bitdo-zero2.md` / 8BitDo Micro: `docs/devices/8bitdo-micro.md`
+- 実機写真: `karabiner-manager/docs/assets/`（`tenbt03.jpg` / `ewin-x8.png`）
+- 過去の調査レポート: `karabiner-manager/docs/archive/`

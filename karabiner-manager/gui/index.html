@@ -24,41 +24,72 @@ body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; backg
 .app { display:grid; grid-template-columns:220px 1fr; grid-template-rows:52px 1fr; height:100vh; }
 
 /* Header */
-header { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; padding:0 20px;
+header { grid-column:1/-1; display:flex; align-items:center; gap:16px; padding:0 20px;
   background:var(--card); border-bottom:1px solid var(--border); }
 header h1 { font-size:16px; font-weight:600; }
-.header-right { display:flex; align-items:center; gap:12px; }
+.header-left { display:flex; align-items:center; gap:12px; }
+.header-right { display:flex; align-items:center; gap:12px; margin-left:auto; }
 #change-indicator { font-size:13px; color:var(--accent); display:none; }
 
 /* Sidebar */
 nav { background:var(--card); border-right:1px solid var(--border); overflow-y:auto; padding:8px 0; }
-.dev-item { padding:10px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;
-  border-left:3px solid transparent; font-size:14px; transition:all .15s; }
+.dev-item { padding:10px 12px 10px 6px; cursor:pointer; display:flex; align-items:center; gap:6px;
+  border-left:3px solid transparent; font-size:14px; transition:all .15s; position:relative; }
 .dev-item:hover { background:#f0f2f5; }
 .dev-item.active { background:var(--accent-bg); border-left-color:var(--accent); font-weight:600; }
-.dev-count { font-size:12px; color:var(--text2); background:var(--bg); padding:2px 8px; border-radius:10px; }
+.dev-name { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.dev-count { font-size:12px; color:var(--text2); background:var(--bg); padding:2px 8px; border-radius:10px; flex-shrink:0; }
+.sb-handle { cursor:grab; color:var(--text2); font-size:11px; opacity:.25; transition:opacity .15s;
+  user-select:none; flex-shrink:0; width:14px; text-align:center; }
+.dev-item:hover .sb-handle { opacity:.7; }
+.sb-handle:active { cursor:grabbing; }
+.dev-item.sb-dragging { opacity:.4; }
+.dev-item.sb-drop-before::before, .dev-item.sb-drop-after::after {
+  content:""; position:absolute; left:0; right:0; height:2px; background:var(--accent);
+  border-radius:1px; z-index:5; pointer-events:none;
+}
+.dev-item.sb-drop-before::before { top:-1px; }
+.dev-item.sb-drop-after::after { bottom:-1px; }
 
 /* Main */
 main { padding:20px 24px; overflow-y:auto; }
+main > .main-header, main > .card, main > p { max-width:900px; margin-left:auto; margin-right:auto; }
 .main-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
 .main-header h2 { font-size:18px; }
 
 /* Cards */
 .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-  margin-bottom:10px; transition:border-color .2s; }
+  margin-bottom:10px; transition:border-color .2s; position:relative; }
 .card.changed { border-color:var(--accent); }
 .card.disabled-rule { opacity:.6; }
+.card.dragging { opacity:.4; }
+.card.drop-before::before, .card.drop-after::after {
+  content:""; position:absolute; left:0; right:0; height:2px; background:var(--accent);
+  border-radius:1px; z-index:5; pointer-events:none;
+}
+.card.drop-before::before { top:-6px; }
+.card.drop-after::after { bottom:-6px; }
+
+/* Drag handle */
+.drag-handle { cursor:grab; color:var(--text2); padding:0 4px; user-select:none;
+  font-size:14px; line-height:1; flex-shrink:0; opacity:.5; transition:opacity .15s; }
+.card:hover .drag-handle { opacity:1; }
+.drag-handle:active { cursor:grabbing; }
 
 /* Simple card */
 .card-simple { padding:12px 16px; }
 .card-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .arrow { color:var(--text2); font-size:18px; flex-shrink:0; }
+.card-simple .card-row { flex-wrap:nowrap; }
+.card-simple select.key-sel { flex:1 1 120px; min-width:100px; max-width:260px; }
+.card-simple .mod-chips { flex-shrink:0; margin-left:auto; }
 
 /* Badge */
 .badge { padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; flex-shrink:0; }
 .badge-simple { background:#e8f5e9; color:#2e7d32; }
 .badge-fn_key { background:#fff3e0; color:#e65100; }
 .badge-complex { background:var(--accent-bg); color:var(--accent); }
+.badge-simul { background:#f3e8ff; color:#7c3aed; }
 .badge-off { background:var(--danger-bg); color:var(--danger); margin-left:8px; }
 
 /* Complex card */
@@ -121,6 +152,14 @@ input.desc-input { width:100%; padding:6px 10px; border:1px solid var(--border);
   background:var(--success); color:#fff; font-size:14px; display:none; z-index:100; box-shadow:0 4px 12px rgba(0,0,0,.15); }
 #toast.error { background:var(--danger); }
 
+/* Save popup (appears near changed card) */
+.save-popup { position:fixed; display:none; align-items:center; gap:8px;
+  padding:6px 12px; background:var(--card); border:1.5px solid var(--accent);
+  border-radius:8px; box-shadow:0 2px 12px rgba(9,105,218,.18); z-index:40;
+  white-space:nowrap; animation:popup-in .15s ease-out; }
+.save-popup .popup-count { font-size:12px; color:var(--accent); font-weight:600; }
+@keyframes popup-in { from { opacity:0; transform:scale(.92); } to { opacity:1; transform:scale(1); } }
+
 /* Add dialog */
 .overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); display:flex; align-items:center;
   justify-content:center; z-index:50; }
@@ -136,15 +175,54 @@ input.desc-input { width:100%; padding:6px 10px; border:1px solid var(--border);
 
 /* Loading */
 #loading { text-align:center; padding:60px; color:var(--text2); }
+
+/* Relacon panel */
+.relacon-panel { padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius);
+  background:var(--card); margin-bottom:14px; }
+.relacon-panel .rp-title { font-size:13px; font-weight:700; color:var(--accent); margin-bottom:10px;
+  display:flex; align-items:center; gap:8px; }
+.relacon-panel .rp-title::before { content:"●"; font-size:10px; }
+.relacon-panel h4 { font-size:11px; font-weight:600; color:var(--text2); text-transform:uppercase;
+  letter-spacing:.5px; margin:14px 0 8px; padding-top:10px; border-top:1px solid var(--border); }
+.relacon-panel h4:first-of-type { border-top:none; padding-top:0; margin-top:0; }
+.rp-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:13px; }
+.rp-row label { min-width:120px; color:var(--text); font-weight:500; }
+.rp-row input[type="range"] { flex:1; }
+.rp-row .rp-val { min-width:48px; text-align:right; font-variant-numeric:tabular-nums;
+  font-size:12px; color:var(--text2); }
+.rp-row input[type="number"] { width:80px; padding:4px 8px; border:1px solid var(--border);
+  border-radius:4px; font-size:13px; text-align:right; }
+.rp-row .rp-unit { font-size:12px; color:var(--text2); }
+.rp-footer { margin-top:12px; display:flex; justify-content:flex-end; align-items:center; gap:10px; }
+.rp-footer .rp-changed { font-size:12px; color:var(--accent); display:none; }
+.rp-footer .rp-changed.on { display:inline; }
+
+/* Key capture modal */
+.capture-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:center;
+  justify-content:center; z-index:60; }
+.capture-box { background:var(--card); border-radius:16px; padding:40px 48px; text-align:center;
+  box-shadow:0 12px 40px rgba(0,0,0,.2); min-width:340px; }
+.capture-box h3 { font-size:18px; margin-bottom:8px; }
+.capture-box .capture-hint { font-size:13px; color:var(--text2); margin-bottom:24px; }
+.capture-box .capture-key { font-size:36px; font-weight:700; color:var(--accent); min-height:50px;
+  display:flex; align-items:center; justify-content:center; }
+.capture-box .capture-mods { font-size:14px; color:var(--text2); margin-top:8px; min-height:22px; }
+.capture-box .capture-note { font-size:11px; color:var(--text2); margin-top:16px; opacity:.7; }
+.capture-box .capture-actions { margin-top:20px; display:flex; justify-content:center; gap:8px; }
+.btn-capture { background:none; border:1px solid var(--border); border-radius:4px; cursor:pointer;
+  color:var(--accent); font-size:13px; padding:2px 6px; line-height:1.4; flex-shrink:0; }
+.btn-capture:hover { background:var(--accent-bg); border-color:var(--accent); }
 </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <h1>Karabiner Manager</h1>
+    <div class="header-left">
+      <button id="save-btn" class="btn btn-primary" onclick="saveAll()" disabled>保存</button>
+      <h1>Karabiner Manager</h1>
+    </div>
     <div class="header-right">
       <span id="change-indicator"></span>
-      <button id="save-btn" class="btn btn-primary" onclick="saveAll()" disabled>保存</button>
       <button class="btn btn-sm" onclick="loadConfig()">更新</button>
     </div>
   </header>
@@ -161,6 +239,7 @@ input.desc-input { width:100%; padding:6px 10px; border:1px solid var(--border);
         <option value="simple">Simple Modification</option>
         <option value="fn_key">Fn Function Key</option>
         <option value="complex">Complex Modification</option>
+        <option value="simultaneous">組み合わせ (同時押し)</option>
       </select>
     </div>
     <div id="add-desc-wrap" class="field" style="display:none">
@@ -169,11 +248,55 @@ input.desc-input { width:100%; padding:6px 10px; border:1px solid var(--border);
     </div>
     <div class="field">
       <label>From</label>
-      <select id="add-from" class="key-sel"></select>
+      <div class="field-row">
+        <select id="add-from" class="key-sel"></select>
+        <button class="btn-capture" onclick="startCapture(v=>{document.getElementById('add-from').value=v})" title="キーキャプチャ">⌨</button>
+      </div>
+      <div id="add-from-mods-wrap" class="field" style="margin-top:6px;display:none">
+        <label style="font-size:12px;color:var(--text2)">From 修飾キー (mandatory)</label>
+        <div class="mod-chips" id="add-from-mods"></div>
+        <label class="lazy-label" style="margin-top:6px">
+          <input type="checkbox" id="add-from-optional-any"> 他の修飾キーも許容 (optional: any)
+        </label>
+        <label class="lazy-label" style="margin-top:4px">
+          <input type="checkbox" id="add-from-lr" onchange="renderAddModChips()"> 左右を区別する (left_shift / right_shift など)
+        </label>
+      </div>
+    </div>
+    <div id="add-simul-wrap" style="display:none">
+      <div class="field">
+        <label>From (2つ目)</label>
+        <div class="field-row">
+          <select id="add-from2" class="key-sel"></select>
+          <button class="btn-capture" onclick="startCapture(v=>{document.getElementById('add-from2').value=v})" title="キーキャプチャ">⌨</button>
+        </div>
+      </div>
+      <div id="add-from3-wrap" class="field" style="display:none">
+        <label>From (3つ目)</label>
+        <div class="field-row">
+          <select id="add-from3" class="key-sel"></select>
+          <button class="btn-capture" onclick="startCapture(v=>{document.getElementById('add-from3').value=v})" title="キーキャプチャ">⌨</button>
+          <button class="btn-icon" onclick="removeSimulKey(3)" title="削除">&times;</button>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <button class="btn btn-outline btn-sm" id="add-simul-more" onclick="addSimulKey()">+ キー追加</button>
+      </div>
+      <div class="field">
+        <label>同時押し検出時間 (ms)</label>
+        <input id="add-simul-threshold" class="param-input" type="number" value="50" min="10" max="1000">
+      </div>
     </div>
     <div class="field">
       <label>To</label>
-      <select id="add-to" class="key-sel"></select>
+      <div class="field-row">
+        <select id="add-to" class="key-sel"></select>
+        <button class="btn-capture" onclick="startCapture(v=>{document.getElementById('add-to').value=v})" title="キーキャプチャ">⌨</button>
+      </div>
+      <div class="field" style="margin-top:6px">
+        <label style="font-size:12px;color:var(--text2)">To 修飾キー</label>
+        <div class="mod-chips" id="add-to-mods"></div>
+      </div>
     </div>
     <div class="dialog-actions">
       <button class="btn" onclick="closeAdd()">キャンセル</button>
@@ -183,8 +306,110 @@ input.desc-input { width:100%; padding:6px 10px; border:1px solid var(--border);
 </div>
 
 <div id="toast"></div>
+<div id="save-popup" class="save-popup">
+  <span class="popup-count" id="popup-count">1件</span>
+  <button class="btn btn-primary btn-sm" onclick="saveAll()">保存</button>
+  <button class="btn-icon" onclick="discardChanges()" title="変更を破棄">&times;</button>
+</div>
+<div id="capture-overlay" class="capture-overlay" style="display:none">
+  <div class="capture-box">
+    <h3>キーキャプチャ</h3>
+    <p class="capture-hint">キーボードのキーを押してください</p>
+    <div class="capture-key" id="capture-display">⌨</div>
+    <div class="capture-mods" id="capture-mods"></div>
+    <div class="capture-actions">
+      <button class="btn btn-sm" onclick="cancelCapture()">キャンセル (Esc)</button>
+      <button class="btn btn-primary btn-sm" id="capture-apply-btn" onclick="applyCapture()" style="display:none">適用</button>
+    </div>
+    <p class="capture-note">※ Karabinerが変換済みのキーが検出されます</p>
+  </div>
+</div>
 
 <script>
+// ── Key capture (EventViewer alternative) ─────────────
+
+const CODE_TO_KARABINER = {
+  KeyA:"a",KeyB:"b",KeyC:"c",KeyD:"d",KeyE:"e",KeyF:"f",KeyG:"g",KeyH:"h",KeyI:"i",KeyJ:"j",
+  KeyK:"k",KeyL:"l",KeyM:"m",KeyN:"n",KeyO:"o",KeyP:"p",KeyQ:"q",KeyR:"r",KeyS:"s",KeyT:"t",
+  KeyU:"u",KeyV:"v",KeyW:"w",KeyX:"x",KeyY:"y",KeyZ:"z",
+  Digit0:"0",Digit1:"1",Digit2:"2",Digit3:"3",Digit4:"4",Digit5:"5",Digit6:"6",Digit7:"7",Digit8:"8",Digit9:"9",
+  Space:"spacebar", Enter:"return_or_enter", Escape:"escape", Backspace:"delete_or_backspace",
+  Delete:"delete_forward", Tab:"tab", CapsLock:"caps_lock", Insert:"insert",
+  ShiftLeft:"left_shift", ShiftRight:"right_shift", ControlLeft:"left_control", ControlRight:"right_control",
+  AltLeft:"left_option", AltRight:"right_option", MetaLeft:"left_command", MetaRight:"right_command",
+  ArrowUp:"up_arrow", ArrowDown:"down_arrow", ArrowLeft:"left_arrow", ArrowRight:"right_arrow",
+  PageUp:"page_up", PageDown:"page_down", Home:"home", End:"end",
+  F1:"f1",F2:"f2",F3:"f3",F4:"f4",F5:"f5",F6:"f6",F7:"f7",F8:"f8",F9:"f9",F10:"f10",F11:"f11",F12:"f12",
+  F13:"f13",F14:"f14",F15:"f15",F16:"f16",F17:"f17",F18:"f18",F19:"f19",F20:"f20",
+  PrintScreen:"print_screen",
+  Numpad0:"keypad_0",Numpad1:"keypad_1",Numpad2:"keypad_2",Numpad3:"keypad_3",Numpad4:"keypad_4",
+  Numpad5:"keypad_5",Numpad6:"keypad_6",Numpad7:"keypad_7",Numpad8:"keypad_8",Numpad9:"keypad_9",
+  NumpadAdd:"keypad_plus",NumpadSubtract:"keypad_hyphen",NumpadMultiply:"keypad_asterisk",
+  NumpadDivide:"keypad_slash",NumpadDecimal:"keypad_period",NumpadEqual:"keypad_equal_sign",
+  NumLock:"keypad_num_lock",NumpadEnter:"keypad_enter",
+  Minus:"hyphen",Equal:"equal_sign",BracketLeft:"open_bracket",BracketRight:"close_bracket",
+  Backslash:"backslash",IntlBackslash:"non_us_backslash",Semicolon:"semicolon",Quote:"quote",
+  Backquote:"grave_accent_and_tilde",Comma:"comma",Period:"period",Slash:"slash",
+  IntlRo:"international1",IntlYen:"international_3",
+  Lang1:"japanese_kana",Lang2:"japanese_eisuu",
+  ContextMenu:"application",
+};
+
+let captureCallback = null;
+let capturedValue = null;
+
+function startCapture(callback) {
+  captureCallback = callback;
+  capturedValue = null;
+  document.getElementById("capture-display").textContent = "⌨";
+  document.getElementById("capture-mods").textContent = "";
+  document.getElementById("capture-apply-btn").style.display = "none";
+  document.getElementById("capture-overlay").style.display = "flex";
+  document.addEventListener("keydown", onCaptureKey, true);
+}
+
+function onCaptureKey(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.code === "Escape" && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
+    cancelCapture();
+    return;
+  }
+  const karabinerKey = CODE_TO_KARABINER[e.code];
+  if (!karabinerKey) {
+    document.getElementById("capture-display").textContent = e.code;
+    document.getElementById("capture-mods").textContent = "（未対応のキー）";
+    return;
+  }
+  capturedValue = `key_code:${karabinerKey}`;
+  document.getElementById("capture-display").textContent = karabinerKey;
+  const mods = [];
+  if (e.shiftKey && !e.code.startsWith("Shift")) mods.push("Shift");
+  if (e.ctrlKey && !e.code.startsWith("Control")) mods.push("Ctrl");
+  if (e.altKey && !e.code.startsWith("Alt")) mods.push("Opt");
+  if (e.metaKey && !e.code.startsWith("Meta")) mods.push("Cmd");
+  document.getElementById("capture-mods").textContent = mods.length ? `+ ${mods.join(" + ")}` : "";
+  document.getElementById("capture-apply-btn").style.display = "inline-block";
+}
+
+function applyCapture() {
+  if (capturedValue && captureCallback) {
+    captureCallback(capturedValue);
+  }
+  closeCapture();
+}
+
+function cancelCapture() {
+  closeCapture();
+}
+
+function closeCapture() {
+  document.removeEventListener("keydown", onCaptureKey, true);
+  document.getElementById("capture-overlay").style.display = "none";
+  captureCallback = null;
+  capturedValue = null;
+}
+
 // ── Key code data ──────────────────────────────────────
 
 const KEY_GROUPS = [
@@ -288,17 +513,59 @@ async function submitAdd() {
   const type = document.getElementById("add-type").value;
   const fromVal = document.getElementById("add-from").value;
   const toVal = document.getElementById("add-to").value;
-  const fromObj = parseKeyValue(fromVal);
   const toObj = parseKeyValue(toVal);
-  const data = { from: fromObj, to: [toObj] };
-  if (type === "complex") {
-    data.rule_description = document.getElementById("add-desc").value || "Custom rule";
+
+  // Apply TO modifiers (all types)
+  if (addToMods.size) {
+    toObj.modifiers = Array.from(addToMods);
   }
+
+  // Build FROM modifiers object (complex/simultaneous only)
+  const fromModifiers = {};
+  if (type === "complex" || type === "simultaneous") {
+    if (addFromMods.size) {
+      fromModifiers.mandatory = Array.from(addFromMods);
+    }
+    const optAny = document.getElementById("add-from-optional-any");
+    if (optAny && optAny.checked) {
+      fromModifiers.optional = ["any"];
+    }
+  }
+
+  let data;
+  if (type === "simultaneous") {
+    const keys = [parseKeyValue(fromVal), parseKeyValue(document.getElementById("add-from2").value)];
+    const from3 = document.getElementById("add-from3");
+    if (document.getElementById("add-from3-wrap").style.display !== "none" && from3.value) {
+      keys.push(parseKeyValue(from3.value));
+    }
+    const threshold = parseInt(document.getElementById("add-simul-threshold").value) || 50;
+    const fromObj = { simultaneous: keys, simultaneous_options: {
+      key_down_order: "insensitive", key_up_order: "insensitive",
+      detect_key_down_uninterruptedly: true,
+      key_event_firing_duration_milliseconds: threshold,
+    }};
+    if (Object.keys(fromModifiers).length) fromObj.modifiers = fromModifiers;
+    data = {
+      from: fromObj,
+      to: [toObj],
+      rule_description: document.getElementById("add-desc").value || "組み合わせルール",
+    };
+  } else {
+    const fromObj = parseKeyValue(fromVal);
+    if (Object.keys(fromModifiers).length) fromObj.modifiers = fromModifiers;
+    data = { from: fromObj, to: [toObj] };
+    if (type === "complex") {
+      data.rule_description = document.getElementById("add-desc").value || "Custom rule";
+    }
+  }
+
+  const sendType = type === "simultaneous" ? "complex" : type;
   try {
     const r = await fetch("/api/add", {
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ group_id: activeGroupId, type, data }),
+      body: JSON.stringify({ group_id: activeGroupId, type: sendType, data }),
     });
     const d = await r.json();
     if (d.ok) {
@@ -315,9 +582,14 @@ async function submitAdd() {
 
 function renderSidebar() {
   const el = document.getElementById("sidebar");
-  el.innerHTML = groups.map(g => `
-    <div class="dev-item ${g.id===activeGroupId?'active':''}" onclick="selectGroup('${esc(g.id)}')">
-      <span>${esc(g.name)}</span>
+  el.innerHTML = groups.map((g, i) => `
+    <div class="dev-item ${g.id===activeGroupId?'active':''}" data-sb-idx="${i}"
+      onclick="selectGroup('${esc(g.id)}')"
+      ondragstart="onSbDragStart(event)" ondragend="onSbDragEnd(event)"
+      ondragover="onSbDragOver(event)" ondragleave="onSbDragLeave(event)" ondrop="onSbDrop(event)">
+      <span class="sb-handle" onmousedown="this.parentElement.draggable=true"
+        onmouseup="this.parentElement.draggable=false">&#x2630;</span>
+      <span class="dev-name">${esc(g.name)}</span>
       <span class="dev-count">${g.mappings.length}</span>
     </div>
   `).join("");
@@ -335,11 +607,13 @@ function renderContent() {
   if (!g) return;
   const el = document.getElementById("content");
   const cards = g.mappings.map((m, i) => m.type === "complex" ? complexCard(m, i) : simpleCard(m, i)).join("");
+  const panel = (g.id === "1390:342") ? relaconPanelHtml(g) : "";
   el.innerHTML = `
     <div class="main-header">
       <h2>${esc(g.name)}</h2>
       <button class="btn btn-outline btn-sm" onclick="openAdd()">+ 追加</button>
     </div>
+    ${panel}
     ${cards || '<p style="color:var(--text2);padding:20px">マッピングなし</p>'}
   `;
 }
@@ -347,8 +621,9 @@ function renderContent() {
 function simpleCard(m, idx) {
   const changed = pendingChanges.has(m.path) ? " changed" : "";
   return `
-    <div class="card card-simple${changed}" data-path="${esc(m.path)}">
+    <div class="card card-simple${changed}" ${dragAttrs(m)}>
       <div class="card-row">
+        ${dragHandleHtml()}
         <span class="badge badge-${m.type}">${m.type==="simple"?"Simple":"Fn"}</span>
         ${keySelHtml(m.from, idx, "from")}
         <span class="arrow">→</span>
@@ -364,18 +639,39 @@ function complexCard(m, idx) {
   const open = expandedSet.has(m.path);
   const changed = pendingChanges.has(m.path) ? " changed" : "";
   const disabledCls = m.enabled ? "" : " disabled-rule";
+  const simul = isSimultaneous(m);
+  const badgeClass = simul ? "badge-simul" : "badge-complex";
+  const badgeLabel = simul ? "組み合わせ" : "Complex";
 
   let body = "";
   if (open) {
-    body = `<div class="card-body open">
-      <div class="field"><label>MANIPULATOR</label><input type="text" class="desc-input" value="${esc(m.rule_description || m.description || '')}" onchange="onDescChange(${idx},this.value)" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px"></div>
-      <div class="field">
+    let fromSection;
+    if (simul) {
+      fromSection = `<div class="field">
+        <label>From (同時押し)</label>
+        ${m.from.simultaneous.map((k, si) => `<div class="field-row" style="margin-bottom:4px">
+          <span style="font-size:12px;color:var(--text2);min-width:20px">${si+1}.</span>
+          ${keySelHtml(k, idx, "simul."+si)}
+        </div>`).join("")}
+        ${m.from.simultaneous_options ? `<div style="margin-top:8px">
+          <span style="font-size:11px;color:var(--text2)">検出時間:</span>
+          <input class="param-input" type="number" value="${m.from.simultaneous_options.key_event_firing_duration_milliseconds||50}"
+            onchange="onSimulParam(${idx},'key_event_firing_duration_milliseconds',this.value)" style="width:60px">
+          <span style="font-size:11px;color:var(--text2)">ms</span>
+        </div>` : ""}
+      </div>`;
+    } else {
+      fromSection = `<div class="field">
         <label>From</label>
         <div class="field-row">
           ${keySelHtml(m.from, idx, "from")}
         </div>
         ${fromModSection(m.from.modifiers, idx)}
-      </div>
+      </div>`;
+    }
+    body = `<div class="card-body open">
+      <div class="field"><label>MANIPULATOR</label><input type="text" class="desc-input" value="${esc(m.rule_description || m.description || '')}" onchange="onDescChange(${idx},this.value)" style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px"></div>
+      ${fromSection}
       <div class="field">
         <label>To</label>
         ${toArrayHtml(m.to, idx, "to")}
@@ -390,10 +686,11 @@ function complexCard(m, idx) {
   }
 
   return `
-    <div class="card card-complex${changed}${disabledCls}" data-path="${esc(m.path)}">
+    <div class="card card-complex${changed}${disabledCls}" ${dragAttrs(m)}>
       <div class="card-head" onclick="toggleCard('${esc(m.path)}')">
+        ${dragHandleHtml()}
         <span class="expand-icon ${open?'open':''}">&#9654;</span>
-        <span class="badge badge-complex">Complex</span>
+        <span class="badge ${badgeClass}">${badgeLabel}</span>
         <span class="card-summary">${summaryHtml(m)}</span>
         ${!m.enabled ? '<span class="badge badge-off">無効</span>' : ''}
         <span class="card-desc">${esc(desc)}</span>
@@ -402,17 +699,41 @@ function complexCard(m, idx) {
     </div>`;
 }
 
+function dragAttrs(m) {
+  if (!m.container || m.container_index === undefined) return `data-path="${esc(m.path)}"`;
+  return `data-path="${esc(m.path)}" data-container="${esc(m.container)}" data-cidx="${m.container_index}"
+    ondragstart="onCardDragStart(event)" ondragend="onCardDragEnd(event)"
+    ondragover="onCardDragOver(event)" ondragleave="onCardDragLeave(event)" ondrop="onCardDrop(event)"`;
+}
+
+function dragHandleHtml() {
+  return `<span class="drag-handle" title="ドラッグで並び替え"
+    onmousedown="this.closest('.card').draggable=true"
+    onmouseup="this.closest('.card').draggable=false">&#x2630;</span>`;
+}
+
+function isSimultaneous(m) {
+  return m.from && Array.isArray(m.from.simultaneous);
+}
+
 function summaryHtml(m) {
   const modMap = {shift:"Shift",command:"Cmd",option:"Opt",control:"Ctrl",
     left_command:"Cmd",left_option:"Opt",left_shift:"Shift",left_control:"Ctrl",
     right_command:"Cmd",right_option:"Opt",right_shift:"Shift",right_control:"Ctrl"};
-  const fk = getKeyName(m.from);
-  const fmods = m.from.modifiers?.mandatory;
-  const fprefix = fmods?.length ? fmods.map(x => modMap[x]||x).join("+")+"+": "";
+
+  let fromText;
+  if (isSimultaneous(m)) {
+    fromText = m.from.simultaneous.map(k => esc(getKeyName(k))).join(" + ");
+  } else {
+    const fk = getKeyName(m.from);
+    const fmods = m.from.modifiers?.mandatory;
+    const fprefix = fmods?.length ? fmods.map(x => modMap[x]||x).join("+")+"+": "";
+    fromText = esc(fprefix) + esc(fk);
+  }
   const tk = m.to.length ? getKeyName(m.to[0]) : "?";
   const tmods = m.to.length && m.to[0].modifiers;
   const tmod = tmods?.length ? `<span class="sum-mod">+${tmods.map(x => modMap[x]||x).join("+")}</span>` : "";
-  return `${esc(fprefix)}${esc(fk)}<span class="sum-arrow">→</span>${esc(tk)}${tmod}`;
+  return `${fromText}<span class="sum-arrow">→</span>${esc(tk)}${tmod}`;
 }
 
 // ── Key select HTML ────────────────────────────────────
@@ -424,7 +745,7 @@ function keySelHtml(keyObj, idx, field) {
   }
   const val = keyObjToValue(keyObj);
   const id = `ks_${idx}_${field.replace(/\./g,"_")}`;
-  return `<select class="key-sel" id="${id}" onchange="onKeySel(${idx},'${field}',this.value)">${keyOptions(val)}</select>`;
+  return `<select class="key-sel" id="${id}" onchange="onKeySel(${idx},'${field}',this.value)">${keyOptions(val)}</select><button class="btn-capture" onclick="startCapture(v=>{document.getElementById('${id}').value=v;onKeySel(${idx},'${field}',v)})" title="キーキャプチャ">⌨</button>`;
 }
 
 function keyOptions(selected) {
@@ -547,16 +868,20 @@ function getMapping(idx) {
   return g ? g.mappings[idx] : null;
 }
 
+let lastChangedPath = null;
+
 function markChange(idx, field, value) {
   const m = getMapping(idx);
   if (!m) return;
   let updates = pendingChanges.get(m.path) || {};
   updates[field] = value;
   pendingChanges.set(m.path, updates);
-  updateSaveBtn();
-  // Visual feedback
   const card = document.querySelector(`[data-path="${m.path}"]`);
-  if (card) card.classList.add("changed");
+  if (card) {
+    card.classList.add("changed");
+    lastChangedPath = m.path;
+  }
+  updateSaveBtn();
 }
 
 function onKeySel(idx, field, val) {
@@ -564,9 +889,16 @@ function onKeySel(idx, field, val) {
   if (!m) return;
   const keyObj = parseKeyValue(val);
 
+  if (field.startsWith("simul.")) {
+    const si = parseInt(field.split(".")[1]);
+    return onSimulKeySel(idx, si, val);
+  }
+
   if (field === "from") {
     const newFrom = { ...keyObj };
     if (m.from.modifiers) newFrom.modifiers = m.from.modifiers;
+    if (m.from.simultaneous) newFrom.simultaneous = m.from.simultaneous;
+    if (m.from.simultaneous_options) newFrom.simultaneous_options = m.from.simultaneous_options;
     m.from = newFrom;
     markChange(idx, "from", newFrom);
   } else {
@@ -664,6 +996,21 @@ function removeToItem(idx, field, arrIdx) {
   renderContent();
 }
 
+function onSimulKeySel(idx, simulIdx, val) {
+  const m = getMapping(idx);
+  if (!m || !m.from.simultaneous) return;
+  m.from.simultaneous[simulIdx] = parseKeyValue(val);
+  markChange(idx, "from", m.from);
+  renderContent();
+}
+
+function onSimulParam(idx, paramKey, val) {
+  const m = getMapping(idx);
+  if (!m || !m.from.simultaneous_options) return;
+  m.from.simultaneous_options[paramKey] = parseInt(val) || 50;
+  markChange(idx, "from", m.from);
+}
+
 function onDescChange(idx, val) {
   const m = getMapping(idx);
   if (!m) return;
@@ -678,6 +1025,207 @@ function onDescChange(idx, val) {
   if (card) card.classList.add("changed");
 }
 
+// ── Drag & drop reorder ───────────────────────────────
+
+let dragState = null;
+
+function onCardDragStart(e) {
+  const card = e.currentTarget;
+  if (!card.dataset.container) return;
+  dragState = {
+    container: card.dataset.container,
+    fromIndex: parseInt(card.dataset.cidx),
+    element: card,
+  };
+  card.classList.add("dragging");
+  e.dataTransfer.effectAllowed = "move";
+  try { e.dataTransfer.setData("text/plain", card.dataset.path || ""); } catch(_) {}
+}
+
+function onCardDragEnd(e) {
+  if (dragState?.element) dragState.element.classList.remove("dragging");
+  clearDropHints();
+  const card = e.currentTarget;
+  if (card) card.draggable = false;
+  dragState = null;
+}
+
+function clearDropHints() {
+  document.querySelectorAll(".card.drop-before,.card.drop-after").forEach(el => {
+    el.classList.remove("drop-before", "drop-after");
+  });
+}
+
+function onCardDragOver(e) {
+  if (!dragState) return;
+  const card = e.currentTarget;
+  if (card.dataset.container !== dragState.container) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "move";
+  const r = card.getBoundingClientRect();
+  const after = (e.clientY - r.top) > r.height / 2;
+  const cidx = parseInt(card.dataset.cidx);
+  if (cidx === dragState.fromIndex) {
+    clearDropHints();
+    return;
+  }
+  clearDropHints();
+  card.classList.add(after ? "drop-after" : "drop-before");
+}
+
+function onCardDragLeave(e) {
+  const card = e.currentTarget;
+  if (!card.contains(e.relatedTarget)) {
+    card.classList.remove("drop-before", "drop-after");
+  }
+}
+
+async function onCardDrop(e) {
+  if (!dragState) return;
+  const card = e.currentTarget;
+  if (card.dataset.container !== dragState.container) return;
+  e.preventDefault();
+  const toCidx = parseInt(card.dataset.cidx);
+  const r = card.getBoundingClientRect();
+  const after = (e.clientY - r.top) > r.height / 2;
+  const targetIdx = after ? toCidx + 1 : toCidx;
+  const payload = {
+    container: dragState.container,
+    from_index: dragState.fromIndex,
+    to_index: targetIdx,
+  };
+  const sameSlot = targetIdx === dragState.fromIndex || targetIdx === dragState.fromIndex + 1;
+  clearDropHints();
+  if (dragState.element) dragState.element.classList.remove("dragging");
+  dragState = null;
+  if (sameSlot) return;
+  try {
+    const resp = await fetch("/api/reorder", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload),
+    });
+    const d = await resp.json();
+    if (d.ok) {
+      toast("並び替えました");
+      await loadConfig();
+    } else {
+      toast(d.msg || "並び替えエラー", true);
+    }
+  } catch(err) { toast(`エラー: ${err.message}`, true); }
+}
+
+// ── Save popup positioning ───────────────────────────
+
+function positionSavePopup() {
+  const popup = document.getElementById("save-popup");
+  if (!lastChangedPath || !pendingChanges.size) {
+    popup.style.display = "none";
+    return;
+  }
+  const card = document.querySelector(`[data-path="${lastChangedPath}"]`);
+  if (!card) { popup.style.display = "none"; return; }
+  popup.style.display = "flex";
+  const rect = card.getBoundingClientRect();
+  const pr = popup.getBoundingClientRect();
+  let top = rect.top + (rect.height - pr.height) / 2;
+  let left = rect.right + 10;
+  if (left + pr.width > window.innerWidth - 8) {
+    left = rect.right - pr.width - 8;
+    top = rect.top - pr.height - 6;
+  }
+  top = Math.max(56, Math.min(top, window.innerHeight - pr.height - 8));
+  popup.style.top = top + "px";
+  popup.style.left = left + "px";
+}
+
+function discardChanges() {
+  pendingChanges.clear();
+  lastChangedPath = null;
+  updateSaveBtn();
+  loadConfig();
+  toast("変更を破棄しました");
+}
+
+document.getElementById("content").addEventListener("scroll", () => {
+  if (pendingChanges.size) positionSavePopup();
+});
+
+// ── Sidebar drag & drop ──────────────────────────────
+
+let sbDragState = null;
+
+function onSbDragStart(e) {
+  const item = e.currentTarget;
+  sbDragState = { fromIndex: parseInt(item.dataset.sbIdx), element: item };
+  item.classList.add("sb-dragging");
+  e.dataTransfer.effectAllowed = "move";
+  try { e.dataTransfer.setData("text/plain", ""); } catch(_) {}
+}
+
+function onSbDragEnd(e) {
+  if (sbDragState?.element) sbDragState.element.classList.remove("sb-dragging");
+  clearSbDropHints();
+  e.currentTarget.draggable = false;
+  sbDragState = null;
+}
+
+function clearSbDropHints() {
+  document.querySelectorAll(".dev-item.sb-drop-before,.dev-item.sb-drop-after").forEach(el => {
+    el.classList.remove("sb-drop-before", "sb-drop-after");
+  });
+}
+
+function onSbDragOver(e) {
+  if (!sbDragState) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "move";
+  const item = e.currentTarget;
+  const idx = parseInt(item.dataset.sbIdx);
+  if (idx === sbDragState.fromIndex) { clearSbDropHints(); return; }
+  const r = item.getBoundingClientRect();
+  const after = (e.clientY - r.top) > r.height / 2;
+  clearSbDropHints();
+  item.classList.add(after ? "sb-drop-after" : "sb-drop-before");
+}
+
+function onSbDragLeave(e) {
+  const item = e.currentTarget;
+  if (!item.contains(e.relatedTarget)) {
+    item.classList.remove("sb-drop-before", "sb-drop-after");
+  }
+}
+
+async function onSbDrop(e) {
+  if (!sbDragState) return;
+  e.preventDefault();
+  const item = e.currentTarget;
+  const toIdx = parseInt(item.dataset.sbIdx);
+  const r = item.getBoundingClientRect();
+  const after = (e.clientY - r.top) > r.height / 2;
+  const targetIdx = after ? toIdx + 1 : toIdx;
+  const sameSlot = targetIdx === sbDragState.fromIndex || targetIdx === sbDragState.fromIndex + 1;
+  clearSbDropHints();
+  if (sbDragState.element) sbDragState.element.classList.remove("sb-dragging");
+  const fromIndex = sbDragState.fromIndex;
+  sbDragState = null;
+  if (sameSlot) return;
+  try {
+    const resp = await fetch("/api/reorder-groups", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ from_index: fromIndex, to_index: targetIdx }),
+    });
+    const d = await resp.json();
+    if (d.ok) {
+      toast("デバイス順を変更しました");
+      await loadConfig();
+    } else {
+      toast(d.msg || "並び替えエラー", true);
+    }
+  } catch(err) { toast(`エラー: ${err.message}`, true); }
+}
+
 // ── UI actions ─────────────────────────────────────────
 
 function toggleCard(path) {
@@ -689,22 +1237,81 @@ function toggleCard(path) {
 function updateSaveBtn() {
   const btn = document.getElementById("save-btn");
   const ind = document.getElementById("change-indicator");
+  const popup = document.getElementById("save-popup");
+  const popupCount = document.getElementById("popup-count");
   const n = pendingChanges.size;
   btn.disabled = n === 0;
   if (n > 0) {
     ind.textContent = `${n}件の変更`;
     ind.style.display = "inline";
+    popupCount.textContent = `${n}件`;
+    positionSavePopup();
   } else {
     ind.style.display = "none";
+    popup.style.display = "none";
+    lastChangedPath = null;
   }
+}
+
+// ── Add dialog modifier state ─────────────────────────
+let addFromMods = new Set();      // e.g. {"shift","left_shift"}
+let addToMods = new Set();
+
+function renderAddModChips() {
+  const lr = document.getElementById("add-from-lr")?.checked;
+  const fromHost = document.getElementById("add-from-mods");
+  const toHost = document.getElementById("add-to-mods");
+  const baseKeys = ["shift","control","option","command"];
+  const fromKeys = lr
+    ? baseKeys.flatMap(k => [`left_${k}`, `right_${k}`])
+    : baseKeys;
+  const toKeys = lr
+    ? baseKeys.flatMap(k => [`left_${k}`, `right_${k}`])
+    : baseKeys;
+  const label = k => {
+    if (k.startsWith("left_") || k.startsWith("right_")) {
+      const side = k.startsWith("left_") ? "L" : "R";
+      const base = k.replace(/^(left|right)_/, "");
+      return `${side}·${MOD_LABELS[base] || base}`;
+    }
+    return MOD_LABELS[k] || k;
+  };
+  if (fromHost) {
+    fromHost.innerHTML = fromKeys.map(k =>
+      `<span class="mod-chip ${addFromMods.has(k) ? 'active' : ''}" onclick="toggleAddMod('from','${k}')">${label(k)}</span>`
+    ).join("");
+  }
+  if (toHost) {
+    toHost.innerHTML = toKeys.map(k =>
+      `<span class="mod-chip ${addToMods.has(k) ? 'active' : ''}" onclick="toggleAddMod('to','${k}')">${label(k)}</span>`
+    ).join("");
+  }
+}
+
+function toggleAddMod(side, key) {
+  const set = side === "from" ? addFromMods : addToMods;
+  if (set.has(key)) set.delete(key); else set.add(key);
+  renderAddModChips();
 }
 
 function openAdd() {
   document.getElementById("add-overlay").style.display = "flex";
   const fromSel = document.getElementById("add-from");
   const toSel = document.getElementById("add-to");
+  const from2Sel = document.getElementById("add-from2");
   fromSel.innerHTML = keyOptions("key_code:spacebar");
   toSel.innerHTML = keyOptions("key_code:spacebar");
+  from2Sel.innerHTML = keyOptions("key_code:spacebar");
+  document.getElementById("add-from3").innerHTML = "";
+  // reset modifier state
+  addFromMods = new Set();
+  addToMods = new Set();
+  const optAny = document.getElementById("add-from-optional-any");
+  if (optAny) optAny.checked = false;
+  const lr = document.getElementById("add-from-lr");
+  if (lr) lr.checked = false;
+  document.getElementById("add-desc").value = "";
+  renderAddModChips();
   onAddTypeChange();
 }
 
@@ -714,7 +1321,31 @@ function closeAdd() {
 
 function onAddTypeChange() {
   const t = document.getElementById("add-type").value;
-  document.getElementById("add-desc-wrap").style.display = t === "complex" ? "block" : "none";
+  document.getElementById("add-desc-wrap").style.display = (t === "complex" || t === "simultaneous") ? "block" : "none";
+  document.getElementById("add-simul-wrap").style.display = t === "simultaneous" ? "block" : "none";
+  if (t === "simultaneous") {
+    document.getElementById("add-from3-wrap").style.display = "none";
+    document.getElementById("add-simul-more").style.display = "";
+  }
+  // From modifiers: Complex/Simultaneous のみ対応 (Karabiner の simple/fn_key は from modifiers 非対応)
+  const fromModsWrap = document.getElementById("add-from-mods-wrap");
+  if (fromModsWrap) {
+    fromModsWrap.style.display = (t === "complex" || t === "simultaneous") ? "block" : "none";
+  }
+}
+
+function addSimulKey() {
+  document.getElementById("add-from3-wrap").style.display = "block";
+  document.getElementById("add-simul-more").style.display = "none";
+  const sel = document.getElementById("add-from3");
+  if (!sel.innerHTML) sel.innerHTML = keyOptions("key_code:spacebar");
+}
+
+function removeSimulKey(n) {
+  if (n === 3) {
+    document.getElementById("add-from3-wrap").style.display = "none";
+    document.getElementById("add-simul-more").style.display = "";
+  }
 }
 
 function toast(msg, isError) {
@@ -727,6 +1358,88 @@ function toast(msg, isError) {
 
 function esc(s) {
   return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+// ── Relacon panel (速度調整のみ) ────────────────────────
+
+let relaconState = { devicePath: null, device: {}, dirty: false };
+
+function relaconPanelHtml(g) {
+  const ds = g.device_settings || {};
+  relaconState.devicePath = g.device_path || null;
+  relaconState.device = { ...ds };
+  const xy = ds.pointing_motion_xy_multiplier ?? 1.0;
+  const wheels = ds.pointing_motion_wheels_multiplier ?? 1.0;
+  return `
+    <div class="relacon-panel" id="relacon-panel">
+      <div class="rp-title">リラコン調整</div>
+      <h4>速度</h4>
+      <div class="rp-row">
+        <label>カーソル速度</label>
+        <input type="range" min="0.1" max="3" step="0.05" value="${xy}"
+          oninput="onRelaconDevice('pointing_motion_xy_multiplier', parseFloat(this.value))">
+        <span class="rp-val" id="rp-xy-val">${xy.toFixed(2)}</span>
+      </div>
+      <div class="rp-row">
+        <label>スクロール速度</label>
+        <input type="range" min="0.1" max="10" step="0.1" value="${wheels}"
+          oninput="onRelaconDevice('pointing_motion_wheels_multiplier', parseFloat(this.value))">
+        <span class="rp-val" id="rp-wheels-val">${wheels.toFixed(2)}</span>
+      </div>
+      <div class="rp-footer">
+        <span class="rp-changed" id="rp-changed">未保存の変更</span>
+        <button class="btn btn-sm" onclick="reloadRelacon()">元に戻す</button>
+        <button class="btn btn-primary btn-sm" id="rp-save-btn" onclick="saveRelacon()" disabled>リラコン設定を保存</button>
+      </div>
+    </div>
+  `;
+}
+
+function onRelaconDevice(field, value) {
+  relaconState.device[field] = value;
+  const labelEl = field === "pointing_motion_xy_multiplier"
+    ? document.getElementById("rp-xy-val")
+    : document.getElementById("rp-wheels-val");
+  if (labelEl) labelEl.textContent = value.toFixed(2);
+  markRelaconDirty();
+}
+
+function markRelaconDirty() {
+  relaconState.dirty = true;
+  const btn = document.getElementById("rp-save-btn");
+  const ind = document.getElementById("rp-changed");
+  if (btn) btn.disabled = false;
+  if (ind) ind.classList.add("on");
+}
+
+function reloadRelacon() {
+  relaconState.dirty = false;
+  loadConfig();
+}
+
+async function saveRelacon() {
+  const btn = document.getElementById("rp-save-btn");
+  if (btn) btn.disabled = true;
+  try {
+    if (relaconState.devicePath && Object.keys(relaconState.device).length) {
+      const r = await fetch("/api/save", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          changes: [{ path: relaconState.devicePath, updates: relaconState.device }],
+        }),
+      });
+      const d = await r.json();
+      if (!d.ok) { toast(d.msg || "保存エラー", true); return; }
+    }
+    toast("リラコン設定を保存しました");
+    relaconState.dirty = false;
+    const ind = document.getElementById("rp-changed");
+    if (ind) ind.classList.remove("on");
+    await loadConfig();
+  } catch(e) {
+    toast(`エラー: ${e.message}`, true);
+  }
 }
 
 // ── Init ───────────────────────────────────────────────

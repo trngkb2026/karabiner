@@ -9,20 +9,21 @@
 
 ---
 
-### 1. Space: 単発でスペース / 長押し・併用で Command
+### 1. 左 Command 単独短押し→英数
 
 - **種別:** `complex_modification`
 - **プロファイル:** `240106`
-- **ルールグループ:** Space: 単発でスペース / 長押し・併用で Command
+- **ルールグループ:** ⌘ 短押しで IME（左→英数 / 右→かな）（X8 BLE キーボード以外）
+- **マニピュレータ:** 左 Command 単独短押し→英数
 
 **from:**
 
 ```json
 {
-  "key_code": "spacebar",
+  "key_code": "left_command",
   "modifiers": {
     "optional": [
-      "caps_lock"
+      "any"
     ]
   }
 }
@@ -44,40 +45,32 @@
 ```json
 {
   "parameters": {
-    "basic.to_if_alone_timeout_milliseconds": 400,
-    "basic.to_if_held_down_threshold_milliseconds": 250
+    "basic.to_if_alone_timeout_milliseconds": 300
   },
   "to_if_alone": [
     {
-      "key_code": "spacebar"
-    }
-  ],
-  "to_if_held_down": [
-    {
-      "key_code": "left_command"
+      "key_code": "japanese_eisuu"
     }
   ]
 }
 ```
 
 
-### 2. ⌘W → スペース
+### 2. 右 Command 単独短押し→かな
 
 - **種別:** `complex_modification`
 - **プロファイル:** `240106`
-- **ルールグループ:** ⌘W → スペース
+- **ルールグループ:** ⌘ 短押しで IME（左→英数 / 右→かな）（X8 BLE キーボード以外）
+- **マニピュレータ:** 右 Command 単独短押し→かな
 
 **from:**
 
 ```json
 {
-  "key_code": "w",
+  "key_code": "right_command",
   "modifiers": {
-    "mandatory": [
-      "command"
-    ],
     "optional": [
-      "caps_lock"
+      "any"
     ]
   }
 }
@@ -88,9 +81,25 @@
 ```json
 [
   {
-    "key_code": "spacebar"
+    "key_code": "right_command",
+    "lazy": true
   }
 ]
+```
+
+**extra（parameters / to_if_alone 等）:**
+
+```json
+{
+  "parameters": {
+    "basic.to_if_alone_timeout_milliseconds": 300
+  },
+  "to_if_alone": [
+    {
+      "key_code": "japanese_kana"
+    }
+  ]
+}
 ```
 
 

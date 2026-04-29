@@ -52,7 +52,7 @@
 | 本体 | `karabiner.json`（complex_modifications.rules に 1 ルール追記 / 全10ルール） |
 | GUI HTML | `karabiner-manager/gui/index.html`（+85行 / -3行 程度） |
 | バックアップ（変更前） | `karabiner.json.bak.tenbt03_lshift_20260420180820` |
-| マッピング一覧 | `karabiner-manager/mappings_by_device/v9427_p12427.md` |
+| マッピング一覧（当時） | `karabiner-manager/mappings_by_device/v9427_p12427.md`（2026-04-21 以降は `docs/devices/tenbt03.md` へ統合） |
 
 ## 4. 実施した検証
 
