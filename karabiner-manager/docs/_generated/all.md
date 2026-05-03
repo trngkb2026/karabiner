@@ -2322,7 +2322,42 @@ null
 ```
 
 
-### 9. device_simple_modification
+### 9. Custom rule
+
+- **種別:** `complex_modification`
+- **プロファイル:** `240106`
+- **ルールグループ:** Custom rule
+- **デバイス条件:** vendor=9427 product=12427
+
+**from:**
+
+```json
+{
+  "key_code": "f2"
+}
+```
+
+**to:**
+
+```json
+[
+  {
+    "key_code": "japanese_eisuu"
+  },
+  {
+    "key_code": "g"
+  },
+  {
+    "key_code": "o"
+  },
+  {
+    "key_code": "return_or_enter"
+  }
+]
+```
+
+
+### 10. device_simple_modification
 
 - **種別:** `device_simple_modification`
 - **プロファイル:** `240106`
@@ -2352,7 +2387,7 @@ null
 ```
 
 
-### 10. device_simple_modification
+### 11. device_simple_modification
 
 - **種別:** `device_simple_modification`
 - **プロファイル:** `240106`
@@ -2382,7 +2417,7 @@ null
 ```
 
 
-### 11. device_simple_modification
+### 12. device_simple_modification
 
 - **種別:** `device_simple_modification`
 - **プロファイル:** `240106`
@@ -2412,7 +2447,7 @@ null
 ```
 
 
-### 12. device_simple_modification
+### 13. device_simple_modification
 
 - **種別:** `device_simple_modification`
 - **プロファイル:** `240106`
@@ -2442,7 +2477,7 @@ null
 ```
 
 
-### 13. device_simple_modification
+### 14. device_simple_modification
 
 - **種別:** `device_simple_modification`
 - **プロファイル:** `240106`
@@ -2472,7 +2507,40 @@ null
 ```
 
 
-### 14. device_simple_modification
+### 15. device_simple_modification
+
+- **種別:** `device_simple_modification`
+- **プロファイル:** `240106`
+- **デバイス条件:** {
+  "is_keyboard": true,
+  "is_pointing_device": true,
+  "product_id": 12427,
+  "vendor_id": 9427
+}
+
+**from:**
+
+```json
+{
+  "key_code": "f4"
+}
+```
+
+**to:**
+
+```json
+[
+  {
+    "key_code": "n",
+    "modifiers": [
+      "command"
+    ]
+  }
+]
+```
+
+
+### 16. device_simple_modification
 
 - **種別:** `device_simple_modification`
 - **プロファイル:** `240106`
@@ -2505,7 +2573,7 @@ null
 ```
 
 
-### 15. device_simple_modification
+### 17. device_simple_modification
 
 - **種別:** `device_simple_modification`
 - **プロファイル:** `240106`
@@ -2535,7 +2603,7 @@ null
 ```
 
 
-### 16. device_simple_modification
+### 18. device_simple_modification
 
 - **種別:** `device_simple_modification`
 - **プロファイル:** `240106`
@@ -2565,7 +2633,7 @@ null
 ```
 
 
-### 17. device_simple_modification
+### 19. device_simple_modification
 
 - **種別:** `device_simple_modification`
 - **プロファイル:** `240106`
@@ -2599,7 +2667,7 @@ null
 ```
 
 
-### 18. device_simple_modification
+### 20. device_simple_modification
 
 - **種別:** `device_simple_modification`
 - **プロファイル:** `240106`
