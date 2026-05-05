@@ -2018,12 +2018,7 @@
                         },
                         {
                             "from": { "pointing_button": "button1" },
-                            "to": [
-                                {
-                                    "key_code": "1",
-                                    "modifiers": ["option"]
-                                }
-                            ]
+                            "to": [{ "key_code": "f6" }]
                         },
                         {
                             "from": { "pointing_button": "button2" },
